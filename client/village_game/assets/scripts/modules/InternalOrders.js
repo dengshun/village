@@ -11,5 +11,8 @@ module.exports = {
     SHOW_ALL_UI: "showAllUI", //显示所有UI
     HIDE_ALL_UI: "hideAllUI", //隐藏所有UI
 
-    OPEN_GAME_PANEL: "openGamePanel", //打开游戏面板
+    //scene module
+    SCENE_TEST: "sceneTest", //进入测试场景
+
+
 }

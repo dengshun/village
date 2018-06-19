@@ -24,12 +24,7 @@ let AssetsManager = cc.Class({
         this._assetLoadedHash = {};
 
         this._preLoadAssets = [
-            { url: cc.hj.R.tex.publicUI, type: cc.SpriteAtlas },
-            { url: cc.hj.R.tex.game, type: cc.SpriteAtlas },
-        ];
-        this._gameAssets = [
-            { url: cc.hj.R.tex.game, type: cc.SpriteAtlas },
-            { url: cc.hj.R.fab.gamePanel, type: cc.Prefab },
+            { url: cc.hj.R.fab.sceneLoading, type: cc.Prefab }
         ];
     },
     getPrefab: function(url) {
@@ -42,16 +37,6 @@ let AssetsManager = cc.Class({
             this._prefabCache[url] = prefab;
         }
         return prefab;
-    },
-    getGameSpriteFrameByName: function(spName) {
-        if (!this._gameAtlas) {
-            this._gameAtlas = cc.loader.getRes(cc.hj.R.tex.game, cc.SpriteAtlas);
-        }
-        if (this._gameAtlas) {
-            return this._gameAtlas.getSpriteFrame(spName);
-        } else {
-            return null;
-        }
     },
 
     _getNotLoadedAssets: function(assets) {
@@ -72,9 +57,6 @@ let AssetsManager = cc.Class({
     loadPreLoadAssets: function(progress, complete) {
         this._startLoad(this._preLoadAssets, progress, complete);
     },
-    loadGameAssets: function(progress, complete) {
-        this._startLoad(this._gameAssets, progress, complete);
-    },
     loadAssets: function(assets, progress, complete) {
         this._startLoad(assets, progress, complete);
     },
@@ -86,7 +68,11 @@ let AssetsManager = cc.Class({
                 this._startGroupLoad();
             }
         } else {
-            complete();
+            if (assets) {
+                complete(assets.length, assets.length);
+            } else {
+                complete(0, 0);
+            }
         }
     },
     _startGroupLoad: function() {
@@ -114,7 +100,7 @@ let AssetsManager = cc.Class({
             }
             cc.loader.loadRes(curItem.url, curItem.type, pHandler, cHandler);
         } else {
-            completeCall();
+            completeCall(Math.min(self._loadingIndex, totalLen), totalLen);
             this._loadingAssets = null;
             this._startGroupLoad();
         }

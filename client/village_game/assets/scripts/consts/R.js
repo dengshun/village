@@ -1,6 +1,8 @@
 module.exports = {
     music: {},
     json: {},
-    fab: {},
+    fab: {
+        sceneLoading: "prefab/store/sceneLoading",
+    },
     tex: {}
 }
