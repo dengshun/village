@@ -16,6 +16,7 @@ cc.Class({
         }
     },
     _startGameHandler() {
-
+        cc.log("==--------=================================");
+        cc.director.loadScene("game");
     }
 });

@@ -8,6 +8,7 @@ cc.Class({
     },
     onLoad() {
         this._initMgrs();
+        cc.log("game load.............................");
     },
     _initMgrs() {
         cc.hj.gameRoot = this.gameRoot;

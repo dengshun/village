@@ -10,7 +10,6 @@ const RenderEffect = require("RenderEffect");
 const CharacterGraphics = require("CharacterGraphics");
 const GraphicsBase = require("GraphicsBase");
 const SceneConst = require("SceneConst");
-const CharacterController = require("CharacterController");
 const SquareMapData = require("SquareMapData");
 const GameObjectFactory = require("GameObjectFactory");
 cc.Class({
@@ -44,29 +43,6 @@ cc.Class({
         _sceneData: {
             default: null,
             serializable: false,
-        },
-        _mainPlayer: {
-            default: null,
-            serializable: false,
-        },
-        mainPlayer: {
-            get: function() {
-                return this._mainPlayer;
-            },
-            visible: false
-        },
-        _mainPlayerController: {
-            default: null,
-            serializable: false,
-        },
-        mainPlayerController: {
-            set: function(value) {
-                this._mainPlayerController = value;
-            },
-            get: function() {
-                return this._mainPlayerController
-            },
-            visible: false,
         },
         _renderChar: {
             default: null,
@@ -144,31 +120,18 @@ cc.Class({
         this._mapLayerNode = cc.find("mapLayer", this.node);
         this._objectsLayerNode = cc.find("objectsLayer", this.node);
         this._map = this._mapLayerNode.getComponent("RpgMap");
+        let visibleSize = cc.view.getVisibleSize();
+        this.node.width = visibleSize.width;
+        this.node.height = visibleSize.height;
+        this._mapLayerNode.width = visibleSize.width;
+        this._mapLayerNode.height = visibleSize.height;
+        this._objectsLayerNode.width = visibleSize.width;
+        this._objectsLayerNode.height = visibleSize.height;
+
         this._objects = [];
         this._renderList0 = [];
         this._renderList1 = [];
         this._renderList2 = [];
-    },
-    _createMainPlayer: function() {
-        if (!this._mainPlayer) {
-            this._mainPlayer = GameObjectFactory.getInstance().getObject(SceneConst.CHAR).getComponent("CharacterObject");
-        }
-        this._mainPlayer.render = this.renderChar;
-        this._mainPlayer.posX = 3482;
-        this._mainPlayer.posY = 892;
-        this._mainPlayer.directionNum = 3;
-        this._mainPlayer.alphaCheck = true;
-        let graphicsR = new CharacterGraphics();
-        graphicsR.addPart(SceneConst.BODY_TYPE, 100001);
-        graphicsR.addPart(SceneConst.WEAPON_TYPE, 200001);
-        this._mainPlayer.graphicsRes = graphicsR;
-        this._mainPlayer.inCamera = true;
-        this._mainPlayer.autoCulling = false;
-        if (this._mainPlayerController == null) {
-            this._mainPlayerController = new CharacterController();
-        }
-        this._mainPlayer.changeController(this._mainPlayerController);
-        this.addObject(this._mainPlayer);
     },
     changeScene: function(id) {
         let rawData = null;
@@ -197,13 +160,11 @@ cc.Class({
     },
 
     _initScene: function() {
-        this._createMainPlayer();
         this.play();
     },
     play: function() {
         this._running = true;
         this._map.setup(this._sceneData);
-        this._map.follow(this._mainPlayer);
     },
     addObject: function(obj, layer = SceneConst.MIDDLE_LAYER) {
         if (this._objects.indexOf(obj) == -1) {
@@ -285,16 +246,13 @@ cc.Class({
         else if (a.zOrder < b.zOrder) return -1;
         else return 0;
     },
-    getAroundObjects: function(type = "", pos = null, radius = -1) {
-        if (pos == null) {
-            pos = this._mainPlayer.pos;
-        }
+    getAroundObjects: function(type = "", pos = null, radius = -1, exclude = null) {
         let result = [];
         let self = this;
         this._renderList1.forEach(function(obj) {
-            if (obj != self._mainPlayer) {
+            if ((type == "" || obj.type == type) && obj != exclude) {
                 if ((!(obj instanceof CharacterBase)) || obj.isDeath == false) {
-                    if ((type == "" || obj.type == type) && (radius == -1 || cc.pDistance(obj.pos, pos) <= radius)) {
+                    if (radius == -1 || cc.pDistance(obj.pos, pos) <= radius) {
                         result.push(obj);
                     }
                 }
@@ -303,15 +261,12 @@ cc.Class({
         return result;
     },
     getNearestObject: function(type = "", pos = null, radius = -1, exclude = null) {
-        if (pos == null) {
-            pos = this._mainPlayer.pos;
-        }
         let minDist = 999999;
         let result = null;
         let len = this._renderList1.length;
         for (let i = 0; i < len; i++) {
             let obj = this._renderList1[i];
-            if (obj != this._mainPlayer && obj.type == type && obj != exclude) {
+            if ((type == "" || obj.type == type) && obj != exclude) {
                 if ((!(obj instanceof CharacterBase)) || obj.isDeath == false) {
                     let dist = cc.pDistance(pos, obj.pos);
                     if ((radius == -1 || dist <= radius) && dist < minDist) {
@@ -344,7 +299,6 @@ cc.Class({
     update: function(dt) {
         if (this._running) {
             this._map.gameLoop();
-            this._mainPlayer.controller.calAction(dt);
             this._updateZOrderF(this._renderList0);
             this._updateZOrderF(this._renderList1);
             this._renderList0.sort(this._sortFunction);
@@ -370,5 +324,5 @@ cc.Class({
                 obj.renderLoop(dt);
             }, this);
         }
-    }
+    },
 });

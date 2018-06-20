@@ -9,6 +9,7 @@ let ServiceOrders = require("ServiceOrders");
 let PopUpTip = require("PopUpTip");
 let Utils = require("Utils");
 let R = require("R");
+let RpgGlobal = require("RpgGlobal");
 let LocalStorageManager = require("LocalStorageManager");
 let AssetsManager = require("AssetsManager");
 let LayoutConst = require("LayoutConst");
@@ -35,6 +36,7 @@ cc.Class({
     },
     _initMgrs() {
         cc.hj = {};
+        RpgGlobal.mapPath = "maps";
         cc.hj.Global = require("Global");
         let SoundManager = require("SoundManager");
         cc.hj.soundMgr = new SoundManager();
@@ -60,7 +62,7 @@ cc.Class({
         cc.hj.assetsMgr.init();
         cc.hj.LayoutConst = LayoutConst;
 
-        setTimeout(this._enterScene, 1000);
+        setTimeout(this._enterScene, 600);
     },
     _onKeyDown(event) {
         if (event.keyCode == cc.KEY.back) {

@@ -15,7 +15,6 @@ cc.Class({
         this._bar = cc.find("bar", loadingLayer);
         this._barOriginWidth = this._bar.width;
         this._bar.width = 1;
-        cc.director.preloadScene("game");
         let self = this;
         var pHandler = function(itemLoaded, itemTotal, groupLoaded, groupTotal) {
             let itemPercent = Math.ceil(itemLoaded / itemTotal * 100);
@@ -32,7 +31,7 @@ cc.Class({
 
     },
     _resLoadComplete() {
-        cc.director.loadScene("game");
+        cc.director.loadScene("login");
     },
     _updateProgress(tip, per) {
         if (per != null && per != undefined) {
