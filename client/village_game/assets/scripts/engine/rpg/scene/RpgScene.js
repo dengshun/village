@@ -44,6 +44,20 @@ cc.Class({
             default: null,
             serializable: false,
         },
+        _sceneScale: {
+            default: 1.0,
+            type: cc.Float,
+            serializable: false,
+        },
+        sceneScale: {
+            get: function() {
+                return this._sceneScale;
+            },
+            set: function(value) {
+                this._updateSceneScale(value);
+            },
+            visible: false,
+        },
         _renderChar: {
             default: null,
             serializable: false,
@@ -158,7 +172,18 @@ cc.Class({
             });
         }
     },
-
+    _updateSceneScale: function(value) {
+        this.node.setScale(value);
+        this._sceneScale = this.node.scaleX;
+        let visibleSize = cc.view.getVisibleSize();
+        this.node.width = visibleSize.width * (1 / this.node.scaleX);
+        this.node.height = visibleSize.height * (1 / this.node.scaleY);
+        this._mapLayerNode.width = this.node.width;
+        this._mapLayerNode.height = this.node.height;
+        this._objectsLayerNode.width = this.node.width;
+        this._objectsLayerNode.height = this.node.height;
+        this._map.updateVisibleSize(this.node.width, this.node.height);
+    },
     _initScene: function() {
         this.play();
     },

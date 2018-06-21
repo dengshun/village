@@ -238,6 +238,11 @@
     "_tileHeight": 256,
     "_mapId": 0,
     "_focusObject": null,
+    "_mapVisibleSize": {
+      "__type__": "cc.Size",
+      "width": 0,
+      "height": 0
+    },
     "_visibleRows": 1,
     "_visibleCols": 1,
     "_lastRenderPoint": {
@@ -312,7 +317,13 @@
     "node": {
       "__id__": 3
     },
-    "_enabled": true
+    "_enabled": true,
+    "_touchStartPoints": [],
+    "_scalePoints": null,
+    "_scaleStartDist": 0,
+    "_nodeScale": 1,
+    "_maxNodeScale": 3,
+    "_minNodeScale": 0.5
   },
   {
     "__type__": "cc.Node",

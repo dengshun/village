@@ -45,6 +45,7 @@ var RpgMap = cc.Class({
         _tileHeight: 256,
         _mapId: 0,
         _focusObject: GameObject,
+        _mapVisibleSize: cc.Size,
         _visibleRows: 1, //可视区域能显示的最大行数
         _visibleCols: 1, //可视区域能显示的最大列数
         _lastRenderPoint: cc.v2(0, 0),
@@ -58,6 +59,12 @@ var RpgMap = cc.Class({
         _cameraCullingView: {
             default: cc.rect(0, 0, 1, 1),
             serializable: false,
+        },
+        mapVisibleSize: {
+            get: function() {
+                return this._mapVisibleSize;
+            },
+            visible: false,
         },
         mapHeight: {
             get: function() {
@@ -85,7 +92,7 @@ var RpgMap = cc.Class({
         },
         startX: {
             get: function() {
-                let visibleSize = cc.view.getVisibleSize();
+                let visibleSize = this._mapVisibleSize;
                 let screen_startX = this._centerPoint.x - Math.floor(visibleSize.width / 2);
                 screen_startX = Math.min(this._mapWidth - visibleSize.width, screen_startX);
                 screen_startX = Math.max(0, screen_startX);
@@ -95,7 +102,7 @@ var RpgMap = cc.Class({
         },
         startY: {
             get: function() {
-                let visibleSize = cc.view.getVisibleSize();
+                let visibleSize = this._mapVisibleSize;
                 let screen_startY = this._centerPoint.y - Math.floor(visibleSize.height / 2);
                 screen_startY = Math.min(this._mapHeight - visibleSize.height, screen_startY);
                 screen_startY = Math.max(0, screen_startY);
@@ -125,9 +132,8 @@ var RpgMap = cc.Class({
         this._mapId = this._sceneData.map_id;
         this._mapWidth = this._sceneData.pixel_width;
         this._mapHeight = this._sceneData.pixel_height;
-        let visibleSize = cc.view.getVisibleSize();
-        this._visibleCols = Math.ceil(visibleSize.width / this._tileWidth);
-        this._visibleRows = Math.ceil(visibleSize.height / this._tileHeight);
+        this._mapVisibleSize = cc.Size.ZERO;
+        this.updateVisibleSize(cc.view.getVisibleSize().width, cc.view.getVisibleSize().height);
         if (this._AStar) {
             this._AStar.dispose();
         }
@@ -170,7 +176,7 @@ var RpgMap = cc.Class({
         let newP = this._focusObject.pos;
         let startX_ = this.startX;
         let startY_ = this.startY;
-        let visibleSize = cc.view.getVisibleSize();
+        let visibleSize = this._mapVisibleSize;
         this._cameraCullingView.x = startX_;
         this._cameraCullingView.y = startY_;
         this._cameraCullingView.width = visibleSize.width;
@@ -235,13 +241,13 @@ var RpgMap = cc.Class({
     },
     _getTileScreenPosition: function(posX, posY) {
         let p = cc.v2(posX, posY);
-        let visibleSize = cc.view.getVisibleSize();
+        let visibleSize = this._mapVisibleSize;
         p.x = p.x - visibleSize.width / 2;
         p.y = visibleSize.height / 2 - p.y;
         return p;
     },
     getScreenPosition: function(posX, posY) {
-        let visibleSize = cc.view.getVisibleSize();
+        let visibleSize = this._mapVisibleSize;
         let p = new cc.v2(0, 0);
         p.x = posX - this.startX;
         p.y = posY - this.startY;
@@ -250,7 +256,7 @@ var RpgMap = cc.Class({
         return p;
     },
     getWorldPosition: function(sx, sy) {
-        let visibleSize = cc.view.getVisibleSize();
+        let visibleSize = this._mapVisibleSize;
         let sx2 = sx + visibleSize.width / 2;
         let sy2 = visibleSize.height / 2 - sy;
         let p = new cc.v2(0, 0);
@@ -284,6 +290,12 @@ var RpgMap = cc.Class({
             return false;
         }
     },
+    updateVisibleSize: function(w, h) {
+        this._mapVisibleSize.width = w;
+        this._mapVisibleSize.height = h;
+        this._visibleCols = Math.ceil(this._mapVisibleSize.width / this._tileWidth);
+        this._visibleRows = Math.ceil(this._mapVisibleSize.height / this._tileHeight);
+    }
 
 });
 module.exports = RpgMap;

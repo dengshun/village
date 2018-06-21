@@ -31,7 +31,7 @@ cc.Class({
             // cc.director.setClearColor(cc.hexToColor('#fed100'));
         }
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this._onKeyDown, this);
-        // cc.game.addPersistRootNode(this.node);
+        cc.game.addPersistRootNode(this.node);
         this._initMgrs();
     },
     _initMgrs() {
