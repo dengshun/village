@@ -304,7 +304,6 @@ cc.Class({
     },
     _renderHandler: function(dt) {
         this._render.render(this);
-
         this.flyStuffs();
     },
     _updateGraphicsData: function() {

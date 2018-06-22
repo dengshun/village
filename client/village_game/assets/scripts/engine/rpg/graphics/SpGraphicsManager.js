@@ -51,7 +51,7 @@ let SpGraphicsManager = cc.Class({
     hasGraphics: function(graphicsName) {
         return this._spDict[graphicsName] !== undefined;
     },
-    getGraphicsData: function(graphicsName) {
+    getData: function(graphicsName) {
         let data = this._spDict[graphicsName];
         if (data) {
             return data;

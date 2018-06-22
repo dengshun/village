@@ -221,15 +221,15 @@
     "_enabled": true,
     "_paused": false,
     "defaultSkin": "",
-    "defaultAnimation": "",
+    "defaultAnimation": "move",
     "loop": true,
     "_premultipliedAlpha": true,
     "_N$skeletonData": {
       "__uuid__": "eee58ec5-b347-4412-b669-aa8b3fcb42ad"
     },
     "_N$timeScale": 1,
-    "_N$debugSlots": false,
-    "_N$debugBones": false
+    "_N$debugSlots": true,
+    "_N$debugBones": true
   },
   {
     "__type__": "cc.PrefabInfo",
