@@ -4,8 +4,8 @@ const BaseController = require("BaseController");
 const CharacterController = require("CharacterController");
 const Direction = require("Direction");
 const SceneConst = require("SceneConst");
-const BaseStuff=require("BaseStuff");
-let STUFF_GAP=0;
+const BaseStuff = require("BaseStuff");
+let STUFF_GAP = 0;
 cc.Class({
     extends: cc.Component,
     properties: {
@@ -41,80 +41,80 @@ cc.Class({
         },
         _graphicsIsDirty: true,
         disposed: {
-            set: function (value) {
+            set: function(value) {
                 this._disposed = value;
             },
-            get: function () {
+            get: function() {
                 return this._disposed;
             },
             visible: false,
         },
         bodyNode: {
-            get: function () {
+            get: function() {
                 return this._bodyNode;
             },
             visible: false,
             type: cc.Node,
         },
         render: {
-            set: function (value) {
+            set: function(value) {
                 this._render = value;
             },
-            get: function () {
+            get: function() {
                 return this._render;
             },
             type: Render,
             visible: false
         },
         posX: {
-            set: function (value) {
+            set: function(value) {
                 this._posX = value;
             },
-            get: function () {
+            get: function() {
                 return this._posX;
             },
             visible: false
         },
         posY: {
-            set: function (value) {
+            set: function(value) {
                 this._posY = value;
                 this._zOrder = this._posY;
             },
-            get: function () {
+            get: function() {
                 return this._posY;
             },
             visible: false
         },
         pos: {
-            get: function () {
+            get: function() {
                 return cc.p(this._posX, this._posY);
             },
             visible: false
         },
         directionNum: {
-            set: function (value) {
+            set: function(value) {
                 this._directionNum = value;
             },
-            get: function () {
+            get: function() {
                 return this._directionNum;
             },
             visible: false
         },
         type: {
-            set: function (value) {
+            set: function(value) {
                 this._type = value;
             },
-            get: function () {
+            get: function() {
                 return this._type;
             },
             visible: false
         },
         graphicsRes: {
-            set: function (value) {
+            set: function(value) {
                 this._graphics = value;
                 this._graphicsIsDirty = true;
             },
-            get: function () {
+            get: function() {
                 return this._graphics;
             },
             type: GraphicsBase,
@@ -126,7 +126,7 @@ cc.Class({
             default: null,
         },
         controller: {
-            get: function (value) {
+            get: function(value) {
                 return this._controller;
             },
             visible: false,
@@ -137,10 +137,10 @@ cc.Class({
             default: 200,
         },
         speed: {
-            set: function (value) {
+            set: function(value) {
                 this._speed = value;
             },
-            get: function () {
+            get: function() {
                 return this._speed;
             },
             visible: false
@@ -161,25 +161,25 @@ cc.Class({
             default: 0,
         },
         zOrder: {
-            get: function () {
+            get: function() {
                 return this._zOrder + this._zOrderF + this._zOrderFixed;
             },
             visible: false
         },
         zOrderFixed: {
-            set: function (value) {
+            set: function(value) {
                 this._zOrderFixed = value;
             },
-            get: function () {
+            get: function() {
                 return this._zOrderFixed;
             },
             visible: false
         },
         zOrderF: {
-            set: function (value) {
+            set: function(value) {
                 this._zOrderF = value;
             },
-            get: function () {
+            get: function() {
                 return this._zOrderF;
             },
             visible: false
@@ -189,10 +189,10 @@ cc.Class({
             default: true,
         },
         autoCulling: {
-            set: function (value) {
+            set: function(value) {
                 this._autoCulling = value;
             },
-            get: function () {
+            get: function() {
                 return this._autoCulling;
             },
             visible: false
@@ -202,10 +202,10 @@ cc.Class({
             default: false,
         },
         inCamera: {
-            set: function (value) {
+            set: function(value) {
                 this._inCamera = value;
             },
-            get: function () {
+            get: function() {
                 return this._inCamera;
             },
             visible: false
@@ -215,10 +215,10 @@ cc.Class({
             default: true,
         },
         isAutoReturn: {
-            set: function (value) {
+            set: function(value) {
                 this._isAutoReturn = value;
             },
-            get: function () {
+            get: function() {
                 return this._isAutoReturn;
             },
             visible: false
@@ -228,9 +228,10 @@ cc.Class({
             default: null,
         },
         stuffList: {
-            get: function () {
+            get: function() {
                 return this._stuffList;
-            }
+            },
+            visible: false,
         },
         _stuffOffSetYNow: {
             serializable: false,
@@ -241,20 +242,20 @@ cc.Class({
             default: null,
         },
         stuffOffSetY: {
-            set: function (value) {
+            set: function(value) {
                 this._explicitStuffOffsetY = value;
                 this._stuffOffSetYNow = value;
             },
-            get: function () {
+            get: function() {
                 return this._stuffOffSetYNow;
             },
             visible: false,
         }
     },
-    onLoad: function () {
+    onLoad: function() {
         this._bodyNode = cc.find("body", this.node);
     },
-    renew: function (...args) {
+    renew: function(...args) {
         if (this._disposed) {
             this._disposed = false;
             this.node.opacity = 255;
@@ -276,7 +277,7 @@ cc.Class({
             this._directionNum = 0;
         }
     },
-    changeController: function (ctrl) {
+    changeController: function(ctrl) {
         if (this._controller) {
             if (this._controller instanceof CharacterController) {
                 this._controller.unsetupListener();
@@ -290,7 +291,7 @@ cc.Class({
             }
         }
     },
-    renderLoop: function (dt) {
+    renderLoop: function(dt) {
         if (!this._disposed) {
             if (this._graphicsIsDirty && this._graphics && this._graphics.isReady) {
                 this._graphicsIsDirty = false;
@@ -301,15 +302,15 @@ cc.Class({
             }
         }
     },
-    _renderHandler: function (dt) {
+    _renderHandler: function(dt) {
         this._render.render(this);
 
         this.flyStuffs();
     },
-    _updateGraphicsData: function () {
+    _updateGraphicsData: function() {
 
     },
-    addStuff: function (stuff) {
+    addStuff: function(stuff) {
         if (this._stuffList == null) {
             this._stuffList = [];
         }
@@ -318,11 +319,11 @@ cc.Class({
             this.removeStuff(oldStuff);
         }
         this._stuffList.push(stuff);
-        if(this.node.parent){
+        if (this.node.parent) {
             this.node.parent.addChild(stuff.node);
         }
     },
-    getStuffByType: function (type) {
+    getStuffByType: function(type) {
         let len = this._stuffList.length;
         for (let i = 0; i < len; i++) {
             let stuff = this._stuffList[i];
@@ -332,7 +333,7 @@ cc.Class({
         }
         return null;
     },
-    removeStuff: function (stuff) {
+    removeStuff: function(stuff) {
         if (this._stuffList) {
             let index = this._stuffList.indexOf(stuff);
             if (index >= 0) {
@@ -343,27 +344,27 @@ cc.Class({
             }
         }
     },
-    addStuffsToParent: function () {
-        if (this._stuffList&&this.node.parent) {
-            let self=this;
-            this._stuffList.forEach(function (stuf) {
+    addStuffsToParent: function() {
+        if (this._stuffList && this.node.parent) {
+            let self = this;
+            this._stuffList.forEach(function(stuf) {
                 self.node.parent.addChild(stuf.node);
             });
         }
     },
-    removeStuffsFromParent: function () {
+    removeStuffsFromParent: function() {
         if (this._stuffList) {
-            this._stuffList.forEach(function (stuf) {
+            this._stuffList.forEach(function(stuf) {
                 if (stuf.node.parent) {
                     stuf.node.removeFromParent();
                 }
             });
         }
     },
-    flyStuffs: function () {
+    flyStuffs: function() {
         if (this._stuffList != null) {
             let hTotalW;
-            this._stuffList.forEach(function (stuff) {
+            this._stuffList.forEach(function(stuff) {
                 if (stuff.layout == BaseStuff.Layout.LAYOUT_HEAD_HORIZONTAL) {
                     hTotalW += stuff.width;
                 }
@@ -371,13 +372,13 @@ cc.Class({
             let lastX = hTotalW >> 1;
             let lastY = this.stuffOffSetY;
             let len = this._stuffList.length;
-            let pos=cc.v2(0,0);
+            let pos = cc.v2(0, 0);
             for (let i = 0; i < len; i++) {
                 let stuff = this._stuffList[i];
                 if (stuff.layout == BaseStuff.Layout.LAYOUT_HEAD_VERTICAL) {
                     pos.x = stuff.offsetX;
                     pos.y = lastY + (stuff.node.height >> 1);
-                    lastY = pos.y+ (stuff.node.height >> 1) + STUFF_GAP;
+                    lastY = pos.y + (stuff.node.height >> 1) + STUFF_GAP;
                 } else if (stuff.layout == BaseStuff.Layout.LAYOUT_HEAD_HORIZONTAL) {
                     pos.x = lastX + (stuff.node.width >> 1);
                     pos.y = this.stuffOffSetY + (stuff.node.height >> 1) + stuff.offsetY;
@@ -389,56 +390,49 @@ cc.Class({
                     pos.x = stuff.offsetX;
                     pos.y = this.stuffOffSetY + (stuff.node.height >> 1) + stuff.offsetY;
                 }
-                stuff.node.setPosition(this.node.x+pos.x,+this.node.y+pos.y);
+                stuff.node.setPosition(this.node.x + pos.x, +this.node.y + pos.y);
             }
         }
     },
-    setPos: function (x, y) {
+    setPos: function(x, y) {
         this._posX = x;
         this._posY = y;
         this._zOrder = this._posY;
     },
     /**朝向某点**/
-    faceToPoint: function (dx, dy) {
+    faceToPoint: function(dx, dy) {
         this.directionNum = this.getDirectionByPoint(dx, dy);
     },
     /**根据角度值修改角色的方向*/
-    getDirectionByPoint: function (dx, dy) {
+    getDirectionByPoint: function(dx, dy) {
         let dir = Direction.Up;
         let x1 = this._posX - dx;
         let y1 = this._posY - dy;
         let ang = (Math.atan2(y1, x1) * 180) / Math.PI;
         if (ang >= -15 && ang < 15) {
-            dir = Direction.Left;//6-8;
-        }
-        else if (ang >= 15 && ang < 75) {
-            dir = Direction.LeftUp;// 7-8;
-        }
-        else if (ang >= 75 && ang < 105) {
-            dir = Direction.Up;// 0;
-        }
-        else if (ang >= 105 && ang < 170) {
-            dir = Direction.RightUp;//1;
-        }
-        else if (ang >= 170 || ang < -170) {
-            dir = Direction.Right;//2;
-        }
-        else if (ang >= -75 && ang < -15) {
-            dir = Direction.LeftDown;// 5-8;
-        }
-        else if (ang >= -105 && ang < -75) {
-            dir = Direction.Down;// 4;
-        }
-        else if (ang >= -170 && ang < -105) {
-            dir = Direction.RightDown;//3;
+            dir = Direction.Left; //6-8;
+        } else if (ang >= 15 && ang < 75) {
+            dir = Direction.LeftUp; // 7-8;
+        } else if (ang >= 75 && ang < 105) {
+            dir = Direction.Up; // 0;
+        } else if (ang >= 105 && ang < 170) {
+            dir = Direction.RightUp; //1;
+        } else if (ang >= 170 || ang < -170) {
+            dir = Direction.Right; //2;
+        } else if (ang >= -75 && ang < -15) {
+            dir = Direction.LeftDown; // 5-8;
+        } else if (ang >= -105 && ang < -75) {
+            dir = Direction.Down; // 4;
+        } else if (ang >= -170 && ang < -105) {
+            dir = Direction.RightDown; //3;
         }
         return dir;
     },
-    dispose: function () {
+    dispose: function() {
         this._disposed = true;
         this._graphics = null;
         this.removeStuffsFromParent();
-        if(this._stuffList){
+        if (this._stuffList) {
             this._stuffList.splice(0, this._stuffList.length);
         }
         if (this._controller) {

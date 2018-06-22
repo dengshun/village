@@ -3,7 +3,7 @@ const SceneConst = require("SceneConst");
 let GraphicsManager = cc.Class({
     statics: {
         _instance: null,
-        getInstance: function () {
+        getInstance: function() {
             if (this._instance == null) {
                 this._instance = new GraphicsManager();
             }
@@ -15,14 +15,14 @@ let GraphicsManager = cc.Class({
         _dataDict: null,
         _sheetDict: null,
         _currentLoading: null,
-        spriteAtlas:null,
+        spriteAtlas: null,
     },
-    ctor: function () {
+    ctor: function() {
         this._loadQueue = [];
         this._dataDict = {};
         this._sheetDict = {};
     },
-    load: function (graphicsName) {
+    load: function(graphicsName) {
         if (!this.hasGraphics(graphicsName)) {
             if (this._loadQueue.indexOf(graphicsName) == -1) {
                 this._loadQueue.push(graphicsName);
@@ -30,27 +30,25 @@ let GraphicsManager = cc.Class({
             if (!this._currentLoading && this._loadQueue.length > 0) {
                 this._loadNext();
             }
-        }else{
-        }
+        } else {}
     },
-    _loadNext: function () {
+    _loadNext: function() {
         let self = this;
         this._currentLoading = this._loadQueue.shift();
         if (this._currentLoading) {
             this._loadData();
         }
     },
-    _loadData: function () {
+    _loadData: function() {
         let self = this;
-        let type=this._currentLoading.split("_")[0];
-        let pathPrefix=RpgGlobal.avatarPath;
-        if(type==SceneConst.EFFECT_TYPE){
-            pathPrefix=RpgGlobal.effectPath;
+        let type = this._currentLoading.split("_")[0];
+        let pathPrefix = RpgGlobal.avatarPath;
+        if (type == SceneConst.EFFECT_TYPE) {
+            pathPrefix = RpgGlobal.effectPath;
         }
         let dataPath = `${pathPrefix}/data/${this._currentLoading}`;
-        var pHandler = function (completedCount, totalCount, item) {
-        }
-        var cHandler = function (error, resource) {
+        var pHandler = function(completedCount, totalCount, item) {}
+        var cHandler = function(error, resource) {
             if (!error) {
                 self._dataDict[self._currentLoading] = cc.loader.getRes(dataPath);
                 self._loadSpriteAlats();
@@ -60,17 +58,16 @@ let GraphicsManager = cc.Class({
         }
         cc.loader.loadRes(dataPath, pHandler, cHandler);
     },
-    _loadSpriteAlats: function () {
+    _loadSpriteAlats: function() {
         let self = this;
-        let type=this._currentLoading.split("_")[0];
-        let pathPrefix=RpgGlobal.avatarPath;
-        if(type==SceneConst.EFFECT_TYPE){
-            pathPrefix=RpgGlobal.effectPath;
+        let type = this._currentLoading.split("_")[0];
+        let pathPrefix = RpgGlobal.avatarPath;
+        if (type == SceneConst.EFFECT_TYPE) {
+            pathPrefix = RpgGlobal.effectPath;
         }
         let texPath = `${pathPrefix}/texture/${this._currentLoading}`;
-        var pHandler = function (completedCount, totalCount, item) {
-        }
-        var cHandler = function (error, resource) {
+        var pHandler = function(completedCount, totalCount, item) {}
+        var cHandler = function(error, resource) {
             if (!error) {
                 self._sheetDict[self._currentLoading] = cc.loader.getRes(texPath, cc.SpriteAtlas);
             }
@@ -79,21 +76,20 @@ let GraphicsManager = cc.Class({
         }
         cc.loader.loadRes(texPath, cc.SpriteAtlas, pHandler, cHandler);
     },
-    hasGraphics: function (graphicsName) {
+    hasGraphics: function(graphicsName) {
         return this._dataDict[graphicsName] !== undefined;
     },
-    getData: function (graphicsName) {
-        let data=this._dataDict[graphicsName];
-        if(data){
+    getData: function(graphicsName) {
+        let data = this._dataDict[graphicsName];
+        if (data) {
             return data.avatar;
         }
         return null;
     },
-    getSpriteAtlas: function (graphicsName) {
-        if(graphicsName.indexOf("11102")>=0){
+    getSpriteAtlas: function(graphicsName) {
+        if (graphicsName.indexOf("11102") >= 0) {
             return this.spriteAtlas;
-        }else
-        {
+        } else {
             return this._sheetDict[graphicsName];
         }
     }
