@@ -1,11 +1,8 @@
 const GraphicsBase = require("GraphicsBase");
 const Render = require("Render");
 const BaseController = require("BaseController");
-const CharacterController = require("CharacterController");
 const Direction = require("Direction");
 const SceneConst = require("SceneConst");
-const BaseStuff = require("BaseStuff");
-let STUFF_GAP = 0;
 cc.Class({
     extends: cc.Component,
     properties: {
@@ -22,24 +19,16 @@ cc.Class({
         },
         _posX: 0,
         _posY: 0,
-        _directionNum: {
-            type: cc.Integer,
-            serializable: false,
-            default: 0,
-        },
         _type: "",
         _bodyNode: {
             type: cc.Node,
             serializable: false,
             default: null,
         },
-        _graphics: GraphicsBase,
-        _render: Render,
         _disposed: {
             serializable: false,
             default: false,
         },
-        _graphicsIsDirty: true,
         disposed: {
             set: function(value) {
                 this._disposed = value;
@@ -55,16 +44,6 @@ cc.Class({
             },
             visible: false,
             type: cc.Node,
-        },
-        render: {
-            set: function(value) {
-                this._render = value;
-            },
-            get: function() {
-                return this._render;
-            },
-            type: Render,
-            visible: false
         },
         posX: {
             set: function(value) {
@@ -91,46 +70,6 @@ cc.Class({
             },
             visible: false
         },
-        directionNum: {
-            set: function(value) {
-                this._directionNum = value;
-            },
-            get: function() {
-                return this._directionNum;
-            },
-            visible: false
-        },
-        type: {
-            set: function(value) {
-                this._type = value;
-            },
-            get: function() {
-                return this._type;
-            },
-            visible: false
-        },
-        graphicsRes: {
-            set: function(value) {
-                this._graphics = value;
-                this._graphicsIsDirty = true;
-            },
-            get: function() {
-                return this._graphics;
-            },
-            type: GraphicsBase,
-            visible: false,
-        },
-        _controller: {
-            type: BaseController,
-            serializable: false,
-            default: null,
-        },
-        controller: {
-            get: function(value) {
-                return this._controller;
-            },
-            visible: false,
-        },
         _speed: {
             type: cc.Integer,
             serializable: false,
@@ -142,6 +81,15 @@ cc.Class({
             },
             get: function() {
                 return this._speed;
+            },
+            visible: false
+        },
+        type: {
+            set: function(value) {
+                this._type = value;
+            },
+            get: function() {
+                return this._type;
             },
             visible: false
         },
@@ -223,34 +171,57 @@ cc.Class({
             },
             visible: false
         },
-        _stuffList: {
+        _controller: {
+            type: BaseController,
             serializable: false,
             default: null,
         },
-        stuffList: {
-            get: function() {
-                return this._stuffList;
+        controller: {
+            get: function(value) {
+                return this._controller;
             },
             visible: false,
         },
-        _stuffOffSetYNow: {
+        _directionNum: {
+            type: cc.Integer,
             serializable: false,
-            default: 50,
+            default: 0,
         },
-        _explicitStuffOffsetY: {
-            serializable: false,
-            default: null,
-        },
-        stuffOffSetY: {
+        directionNum: {
             set: function(value) {
-                this._explicitStuffOffsetY = value;
-                this._stuffOffSetYNow = value;
+                this._directionNum = value;
+                if (this._graphics) {
+                    this._graphics.setDirection(this.directionNum);
+                }
             },
             get: function() {
-                return this._stuffOffSetYNow;
+                return this._directionNum;
             },
+            visible: false
+        },
+        _graphics: GraphicsBase,
+        graphicsRes: {
+            set: function(value) {
+                this._graphics = value;
+                this._graphics.setDirection(this.directionNum);
+            },
+            get: function() {
+                return this._graphics;
+            },
+            type: GraphicsBase,
             visible: false,
-        }
+        },
+        _render: Render,
+        render: {
+            set: function(value) {
+                this._render = value;
+            },
+            get: function() {
+                return this._render;
+            },
+            type: Render,
+            visible: false
+        },
     },
     onLoad: function() {
         this._bodyNode = cc.find("body", this.node);
@@ -260,9 +231,8 @@ cc.Class({
             this._disposed = false;
             this.node.opacity = 255;
             this._bodyNode.opacity = 255;
-            this._graphics = null;
             this._render = null;
-            this._graphicsIsDirty = true;
+            this._graphics = null;
             this._type = "";
             this.id = 0;
             this.data = null;
@@ -293,104 +263,12 @@ cc.Class({
     },
     renderLoop: function(dt) {
         if (!this._disposed) {
-            if (this._graphicsIsDirty && this._graphics && this._graphics.isReady) {
-                this._graphicsIsDirty = false;
-                this._updateGraphicsData();
-            }
-            if (this._render) {
-                this._renderHandler(dt);
-            }
+            this._renderHandler(dt);
         }
     },
     _renderHandler: function(dt) {
-        this._render.render(this);
-        this.flyStuffs();
-    },
-    _updateGraphicsData: function() {
-
-    },
-    addStuff: function(stuff) {
-        if (this._stuffList == null) {
-            this._stuffList = [];
-        }
-        let oldStuff = this.getStuffByType(stuff.type);
-        if (oldStuff) {
-            this.removeStuff(oldStuff);
-        }
-        this._stuffList.push(stuff);
-        if (this.node.parent) {
-            this.node.parent.addChild(stuff.node);
-        }
-    },
-    getStuffByType: function(type) {
-        let len = this._stuffList.length;
-        for (let i = 0; i < len; i++) {
-            let stuff = this._stuffList[i];
-            if (stuff.type == type) {
-                return stuff;
-            }
-        }
-        return null;
-    },
-    removeStuff: function(stuff) {
-        if (this._stuffList) {
-            let index = this._stuffList.indexOf(stuff);
-            if (index >= 0) {
-                this._stuffList.splice(index, 1);
-                if (stuff.node.parent) {
-                    stuf.node.removeFromParent();
-                }
-            }
-        }
-    },
-    addStuffsToParent: function() {
-        if (this._stuffList && this.node.parent) {
-            let self = this;
-            this._stuffList.forEach(function(stuf) {
-                self.node.parent.addChild(stuf.node);
-            });
-        }
-    },
-    removeStuffsFromParent: function() {
-        if (this._stuffList) {
-            this._stuffList.forEach(function(stuf) {
-                if (stuf.node.parent) {
-                    stuf.node.removeFromParent();
-                }
-            });
-        }
-    },
-    flyStuffs: function() {
-        if (this._stuffList != null) {
-            let hTotalW;
-            this._stuffList.forEach(function(stuff) {
-                if (stuff.layout == BaseStuff.Layout.LAYOUT_HEAD_HORIZONTAL) {
-                    hTotalW += stuff.width;
-                }
-            });
-            let lastX = hTotalW >> 1;
-            let lastY = this.stuffOffSetY;
-            let len = this._stuffList.length;
-            let pos = cc.v2(0, 0);
-            for (let i = 0; i < len; i++) {
-                let stuff = this._stuffList[i];
-                if (stuff.layout == BaseStuff.Layout.LAYOUT_HEAD_VERTICAL) {
-                    pos.x = stuff.offsetX;
-                    pos.y = lastY + (stuff.node.height >> 1);
-                    lastY = pos.y + (stuff.node.height >> 1) + STUFF_GAP;
-                } else if (stuff.layout == BaseStuff.Layout.LAYOUT_HEAD_HORIZONTAL) {
-                    pos.x = lastX + (stuff.node.width >> 1);
-                    pos.y = this.stuffOffSetY + (stuff.node.height >> 1) + stuff.offsetY;
-                    lastX = pos.x + (stuff.node.width >> 1) + STUFF_GAP;
-                } else if (stuff.layout == BaseStuff.Layout.LAYOUT_FOOT_ABSOLUTE) {
-                    pos.x = stuff.offsetX;
-                    pos.y = stuff.offsetY;
-                } else if (stuff.layout == BaseStuff.Layout.LAYOUT_HEAD_ABSOLUTE) {
-                    pos.x = stuff.offsetX;
-                    pos.y = this.stuffOffSetY + (stuff.node.height >> 1) + stuff.offsetY;
-                }
-                stuff.node.setPosition(this.node.x + pos.x, +this.node.y + pos.y);
-            }
+        if (this._render) {
+            this._render.render(dt, this);
         }
     },
     setPos: function(x, y) {
@@ -429,11 +307,8 @@ cc.Class({
     },
     dispose: function() {
         this._disposed = true;
+        this._graphics.dispose();
         this._graphics = null;
-        this.removeStuffsFromParent();
-        if (this._stuffList) {
-            this._stuffList.splice(0, this._stuffList.length);
-        }
         if (this._controller) {
             this.changeController(null);
         }

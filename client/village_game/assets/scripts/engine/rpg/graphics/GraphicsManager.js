@@ -15,7 +15,6 @@ let GraphicsManager = cc.Class({
         _dataDict: null,
         _sheetDict: null,
         _currentLoading: null,
-        spriteAtlas: null,
     },
     ctor: function() {
         this._loadQueue = [];
@@ -46,7 +45,7 @@ let GraphicsManager = cc.Class({
         if (type == SceneConst.EFFECT_TYPE) {
             pathPrefix = RpgGlobal.effectPath;
         }
-        let dataPath = `${pathPrefix}/data/${this._currentLoading}`;
+        let dataPath = `${pathPrefix}/frames/data/${this._currentLoading}`;
         var pHandler = function(completedCount, totalCount, item) {}
         var cHandler = function(error, resource) {
             if (!error) {
@@ -65,7 +64,7 @@ let GraphicsManager = cc.Class({
         if (type == SceneConst.EFFECT_TYPE) {
             pathPrefix = RpgGlobal.effectPath;
         }
-        let texPath = `${pathPrefix}/texture/${this._currentLoading}`;
+        let texPath = `${pathPrefix}/frames/texture/${this._currentLoading}`;
         var pHandler = function(completedCount, totalCount, item) {}
         var cHandler = function(error, resource) {
             if (!error) {
@@ -87,10 +86,6 @@ let GraphicsManager = cc.Class({
         return null;
     },
     getSpriteAtlas: function(graphicsName) {
-        if (graphicsName.indexOf("11102") >= 0) {
-            return this.spriteAtlas;
-        } else {
-            return this._sheetDict[graphicsName];
-        }
+        return this._sheetDict[graphicsName];
     }
 });

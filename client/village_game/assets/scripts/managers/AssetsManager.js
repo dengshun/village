@@ -24,7 +24,13 @@ let AssetsManager = cc.Class({
         this._assetLoadedHash = {};
 
         this._preLoadAssets = [
-            { url: cc.hj.R.fab.sceneLoading, type: cc.Prefab }
+            { url: cc.hj.R.fab.sceneLoading, type: cc.Prefab },
+            { url: cc.hj.R.fab.characterObject, type: cc.Prefab },
+            { url: cc.hj.R.fab.ncharacterObject, type: cc.Prefab },
+            { url: cc.hj.R.fab.bounceFont, type: cc.Prefab },
+            { url: cc.hj.R.fab.effectObject, type: cc.Prefab },
+            { url: cc.hj.R.fab.bloodBar, type: cc.Prefab },
+            { url: cc.hj.R.fab.titleStuff, type: cc.Prefab },
         ];
     },
     getPrefab: function(url) {

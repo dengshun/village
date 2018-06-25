@@ -37,6 +37,7 @@ cc.Class({
     _initMgrs() {
         cc.hj = {};
         RpgGlobal.mapPath = "maps";
+        RpgGlobal.avatarPath = "avatars";
         cc.hj.Global = require("Global");
         let SoundManager = require("SoundManager");
         cc.hj.soundMgr = new SoundManager();

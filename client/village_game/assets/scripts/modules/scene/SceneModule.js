@@ -1,7 +1,15 @@
 let BaseModule = require("BaseModule");
-const SceneManager = require("SceneManager");
 let SceneLoading = require("SceneLoading");
 let GameObject = require("GameObject");
+
+const GameObjectFactory = require("GameObjectFactory");
+const SceneConst = require("SceneConst");
+const GraphicsBase = require("GraphicsBase");
+const BounceFontsManager = require("BounceFontsManager");
+const Direction = require("Direction");
+const SceneManager = require("SceneManager");
+const SceneFightManager = require("SceneFightManager");
+const GraphicsManager = require("GraphicsManager");
 cc.Class({
     extends: BaseModule,
     properties: {
@@ -9,10 +17,21 @@ cc.Class({
         sceneLayer: cc.Node,
         uiLayer: cc.Node,
         _gameScene: null,
+        _monsterIdStart: {
+            serializable: false,
+            default: 100000,
+        },
 
     },
     onLoad() {
         this._super();
+        GameObjectFactory.getInstance().registePrefab("CharacterObject", cc.loader.getRes(cc.hj.R.fab.characterObject, cc.Prefab));
+        GameObjectFactory.getInstance().registePrefab("NCharacterObject", cc.loader.getRes(cc.hj.R.fab.ncharacterObject, cc.Prefab));
+        GameObjectFactory.getInstance().registePrefab("BounceFont", cc.loader.getRes(cc.hj.R.fab.bounceFont, cc.Prefab));
+        GameObjectFactory.getInstance().registePrefab("EffectObject", cc.loader.getRes(cc.hj.R.fab.effectObject, cc.Prefab));
+        GameObjectFactory.getInstance().registePrefab("BloodBar", cc.loader.getRes(cc.hj.R.fab.bloodBar, cc.Prefab));
+        GameObjectFactory.getInstance().registePrefab("TitleStuff", cc.loader.getRes(cc.hj.R.fab.titleStuff, cc.Prefab));
+
         this._gameScene = this.sceneLayer.getComponent("GameScene");
         SceneManager.getInstance().scene = this._gameScene;
         this._gameScene.sceneReadyCallBack = this._sceneReadyCallBack.bind(this);
@@ -46,6 +65,56 @@ cc.Class({
         focusObj.posX = 3482;
         focusObj.posY = 892;
         this._gameScene.map.follow(focusObj);
+        this._createTestMonsters();
+    },
+    _createTestMonsters: function() {
+        for (let i = 0; i < 10; i++) {
+            this._monsterIdStart++;
+            this._createMonster(this._monsterIdStart);
+        }
+    },
+    _createMonster: function(id) {
+        let monster = GameObjectFactory.getInstance().getObject(SceneConst.NPC).getComponent("NCharacterObject");
+        monster.id = id;
+        this._gameScene.characterHash[monster.id] = monster;
+        monster.render = this._gameScene.renderNChar;
+        monster.posX = 3482 + (Math.random() < 0.5 ? -Math.random() * 300 : Math.random() * 300);
+        monster.posY = 892 + (Math.random() < 0.5 ? -Math.random() * 300 : Math.random() * 300);
+        let directionNum = (Math.random() * 5 >> 0) + 3;
+        if (directionNum > 4) {
+            directionNum = directionNum - 8;
+        }
+        monster.directionNum = directionNum;
+        monster.alphaCheck = false;
+        monster.autoCulling = false;
+        let graphicsR = new GraphicsBase();
+        graphicsR.addPart(SceneConst.BODY_TYPE, 11102);
+        monster.graphicsRes = graphicsR;
+
+        let hpBar = GameObjectFactory.getInstance().getObject(SceneConst.STUFF_HP).getComponent("BloodBar");
+        monster.hpBar = hpBar;
+        hpBar.setBlood(100, 100);
+
+
+        let title = GameObjectFactory.getInstance().getObject(SceneConst.STUFF_TITLE).getComponent("TitleStuff");
+        monster.title = title;
+        title.text = "Monster:" + id;
+
+        this._gameScene.addObject(monster);
+        // BounceFontsManager.getInstance().addFightBounce(monster,"999888",Direction.Up);
+        // BounceFontsManager.getInstance().addFightBounce(monster,"999881",Direction.RightUp);
+        // BounceFontsManager.getInstance().addFightBounce(monster,"999882",Direction.Right);
+        // BounceFontsManager.getInstance().addFightBounce(monster,"999883",Direction.RightDown);
+        // BounceFontsManager.getInstance().addFightBounce(monster,"999884",Direction.Down);
+        // BounceFontsManager.getInstance().addFightBounce(monster,"999885",Direction.LeftDown);
+        // BounceFontsManager.getInstance().addFightBounce(monster,"999886",Direction.Left);
+        // BounceFontsManager.getInstance().addFightBounce(monster,"999887",Direction.LeftUp);
+        // BounceFontsManager.getInstance().addFightBounce(monster,"999887",Direction.LeftUp);
+        // BounceFontsManager.getInstance().addFightBounce(monster,"999887",Direction.LeftUp);
+        // BounceFontsManager.getInstance().addFightBounce(monster,"999887",Direction.LeftUp);
+        // BounceFontsManager.getInstance().addFightBounce(monster,"999887",Direction.LeftUp);
+        // BounceFontsManager.getInstance().addFightBounce(monster,"999887",Direction.LeftUp);
+        // BounceFontsManager.getInstance().addFightBounce(monster,"999887",Direction.LeftUp);
     },
 
 

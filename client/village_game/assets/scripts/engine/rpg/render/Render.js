@@ -1,8 +1,5 @@
 let Render = cc.Class({
-    name:"Render",
-    render: function (target) {
-    },
-    _draw: function (target, directionNum, frame) {
-    }
+    name: "Render",
+    render: function(dt, target) {},
 });
-module.exports=Render;
+module.exports = Render;

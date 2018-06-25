@@ -1,7 +1,8 @@
-const MovieObject = require("MovieObject");
-const RpgScene=require("RpgScene");
+const GameObject = require("GameObject");
+const RpgScene = require("RpgScene");
+const GraphicsBase = require("GraphicsBase");
 cc.Class({
-    extends: MovieObject,
+    extends: GameObject,
     properties: {
         playEndCall: {
             type: Function,
@@ -14,9 +15,30 @@ cc.Class({
             default: null,
             type: RpgScene,
             visible: false,
-        }
+        },
+        graphicsRes: {
+            set: function(value) {
+                this._graphics = value;
+                this._graphics.setDirection(this.directionNum);
+                this._graphics.setStartListener(this._movieStartListener.bind(this));
+                this._graphics.setEndListener(this._movieEndListener.bind(this));
+                this._graphics.setCompleteListener(this._movieCompleteListener.bind(this));
+            },
+            get: function() {
+                return this._graphics;
+            },
+            override: true,
+            type: GraphicsBase,
+            visible: false,
+        },
     },
-    _loopPlayEndHandler: function () {
+    _loopPlayEndHandler: function() {
+
+    },
+    _movieStartListener: function() {
+
+    },
+    _movieEndListener: function() {
         if (this.scene) {
             this.scene.removeObject(this);
         }
@@ -30,9 +52,12 @@ cc.Class({
             }
         }
     },
-    dispose: function () {
+    _movieCompleteListener: function() {
+
+    },
+    dispose: function() {
         this._super();
         this.playEndCall = null;
-        this.scene=null;
+        this.scene = null;
     }
 });

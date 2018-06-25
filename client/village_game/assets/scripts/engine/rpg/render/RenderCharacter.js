@@ -1,18 +1,19 @@
 const Render = require("Render");
 const RpgGlobal = require("RpgGlobal");
-let RenderCharacter=cc.Class({
-    name:"RenderCharacter",
+let RenderCharacter = cc.Class({
+    name: "RenderCharacter",
     extends: Render,
-    render: function (target) {
-        let p=RpgGlobal.scene.map.getScreenPosition(target.posX,target.posY);
-        target.node.setPosition(p.x>>0,p.y>>0);
-        if(target.bodyNode){
-            this._draw(target, target.directionNum, target.currentFrame);
+    render: function(dt, target) {
+        let p = RpgGlobal.scene.map.getScreenPosition(target.posX, target.posY);
+        target.node.setPosition(p.x >> 0, p.y >> 0);
+        let nodes = [];
+        if (target.bodyNode) {
+            nodes.push(target.bodyNode);
         }
+        if (target.weaponNode) {
+            nodes.push(target.weaponNode);
+        }
+        target.graphicsRes.render(dt, nodes);
     },
-    _draw: function (target, directionNum, frame) {
-        target.graphicsRes.renderBody(target.bodyNode, directionNum, frame);
-        target.graphicsRes.renderWeapon(target.weaponNode,directionNum,frame);
-    }
 });
-module.exports=RenderCharacter;
+module.exports = RenderCharacter;

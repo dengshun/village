@@ -18,5 +18,9 @@ var SceneManager = cc.Class({
             visible: false,
         }
     },
+    getEffect: function(effectId, pos = null, layer = SceneConst.TOP_LAYER, faceTo = null) {
+        let effect = this.scene.createEffect(effectId, pos, layer, faceTo);
+        return effect;
+    }
 });
 module.exports = SceneManager;
