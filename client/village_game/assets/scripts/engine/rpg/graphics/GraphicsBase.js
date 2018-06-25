@@ -195,7 +195,6 @@ let GraphicsBase = cc.Class({
                         spriteFrame = this._bodyAtlas.getSpriteFrame(this._nowAction + "-" + absDirectionNum + "-" + this._bodyFrameData.linkage);
                     }
                 }
-                cc.log(this._bodyAtlas + "======@@@@@@@@@@@@@@@@@@@@@@@@@@@@" + (this._nowAction + "-" + absDirectionNum + "-" + this._bodyFrameData.linkage));
                 if (spriteFrame) {
                     target.getComponent(cc.Sprite).spriteFrame = spriteFrame;
                     if (directionNum < 0) {

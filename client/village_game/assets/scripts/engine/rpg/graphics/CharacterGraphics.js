@@ -12,7 +12,7 @@ let CharacterGraphics = cc.Class({
         _weaponName: "",
     },
     setAction: function(value) {
-        this._super();
+        this._super(value);
         this._weaponGraphicsData = null;
         this._updateWeaponGraphicsData();
     },
@@ -41,8 +41,8 @@ let CharacterGraphics = cc.Class({
     },
     _renderGraphicsWeapon: function(target) {
         if (this._weaponName) {
-            let directionNum = this.directionNum;
-            let currentFrame = this.currentFrame;
+            let directionNum = this._directionNum;
+            let currentFrame = this._currentFrame;
             if (this._weaponGraphicsData) {
                 this._weaponFrameData = null;
                 let absDirectionNum;
@@ -53,6 +53,7 @@ let CharacterGraphics = cc.Class({
                     absDirectionNum = 0;
                 }
                 let dirData = this._getDirFramsData(this._weaponGraphicsData.dir, absDirectionNum);
+
                 if (dirData) {
                     this._weaponFrameData = this._getFrameData(dirData, currentFrame);
                     let spriteFrame;

@@ -10,6 +10,8 @@ const Direction = require("Direction");
 const SceneManager = require("SceneManager");
 const SceneFightManager = require("SceneFightManager");
 const GraphicsManager = require("GraphicsManager");
+const CharacterController = require("CharacterController");
+const CharacterGraphics = require("CharacterGraphics");
 cc.Class({
     extends: BaseModule,
     properties: {
@@ -22,6 +24,10 @@ cc.Class({
             default: 100000,
         },
 
+        _mainPlayer: {
+            default: null,
+            serializable: false,
+        },
     },
     onLoad() {
         this._super();
@@ -61,10 +67,13 @@ cc.Class({
     _sceneReadyCallBack() {
         cc.log("ready..................................");
         cc.hj.panelMgr.closePanel(this._sceneLoading.id);
-        let focusObj = new GameObject();
-        focusObj.posX = 3482;
-        focusObj.posY = 892;
-        this._gameScene.map.follow(focusObj);
+        // let focusObj = new GameObject();
+        // focusObj.posX = 3482;
+        // focusObj.posY = 892;
+        // this._gameScene.map.follow(focusObj);
+        this._createMainPlayer();
+
+
         this._createTestMonsters();
     },
     _createTestMonsters: function() {
@@ -116,6 +125,27 @@ cc.Class({
         // BounceFontsManager.getInstance().addFightBounce(monster,"999887",Direction.LeftUp);
         // BounceFontsManager.getInstance().addFightBounce(monster,"999887",Direction.LeftUp);
     },
+    _createMainPlayer: function() {
+        if (!this._mainPlayer) {
+            this._mainPlayer = GameObjectFactory.getInstance().getObject(SceneConst.CHAR).getComponent("CharacterObject");
+        }
+        this._mainPlayer.render = this._gameScene.renderChar;
+        this._mainPlayer.posX = 3482;
+        this._mainPlayer.posY = 892;
+        this._mainPlayer.directionNum = 3;
+        this._mainPlayer.alphaCheck = true;
+        let graphicsR = new CharacterGraphics();
+        graphicsR.addPart(SceneConst.BODY_TYPE, 100001);
+        graphicsR.addPart(SceneConst.WEAPON_TYPE, 200001);
+        this._mainPlayer.graphicsRes = graphicsR;
+        this._mainPlayer.inCamera = true;
+        this._mainPlayer.autoCulling = false;
+        this._mainPlayer.changeController(new CharacterController());
+        this._gameScene.addObject(this._mainPlayer);
+
+        this._gameScene.map.follow(this._mainPlayer);
+
+    }
 
 
 });

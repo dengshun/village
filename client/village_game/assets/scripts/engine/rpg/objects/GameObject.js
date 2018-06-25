@@ -1,6 +1,7 @@
 const GraphicsBase = require("GraphicsBase");
 const Render = require("Render");
 const BaseController = require("BaseController");
+const CharacterController = require("CharacterController");
 const Direction = require("Direction");
 const SceneConst = require("SceneConst");
 cc.Class({
