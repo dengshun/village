@@ -1,5 +1,5 @@
 //p1(cc.Vec2)线段起点，p2(cc.Vec2)线段起点,r:圆的半径（圆的中心在对应坐标系的中心）。判断直线是否与玩家圆形身体有交点
-let lineIsIntersectBody = function (p1, p2, rad) {
+let lineIsIntersectBody = function(p1, p2, rad) {
     let E = p1;
     let L = p2;
     let C = cc.p(0, 0);
@@ -13,8 +13,7 @@ let lineIsIntersectBody = function (p1, p2, rad) {
     if (discriminant < 0) {
         // no intersection
         return false;
-    }
-    else {
+    } else {
         // ray didn't totally miss sphere,
         // so there is a solution to
         // the equation.
@@ -53,21 +52,24 @@ let lineIsIntersectBody = function (p1, p2, rad) {
         return false;
     }
 };
-let pointInPolygon = function (p, poly) {
-    let x = p.x, y = p.y;
+let pointInPolygon = function(p, poly) {
+    let x = p.x,
+        y = p.y;
     let inside = false;
     for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
-        let xi = poly[i].x, yi = poly[i].y;
-        let xj = poly[j].x, yj = poly[j].y;
+        let xi = poly[i].x,
+            yi = poly[i].y;
+        let xj = poly[j].x,
+            yj = poly[j].y;
 
-        let intersect = ((yi > y) != (yj > y))
-            && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+        let intersect = ((yi > y) != (yj > y)) &&
+            (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
         if (intersect) inside = !inside;
     }
 
     return inside;
 };
-let scientificToNumber = function (num) {
+let scientificToNumber = function(num) {
     let str = num.toString();
     let reg = /^(\d+)(e)([\-]?\d+)$/;
     let arr, len,
@@ -87,16 +89,17 @@ let scientificToNumber = function (num) {
         return '0.' + zero + arr[1];
     }
 };
-let interpolate = function (p1, p2, f) {
+let interpolate = function(p1, p2, f) {
     let f1 = 1 - f;
     return cc.p(p1.x * f + p2.x * f1, p1.y * f + p2.y * f1);
 };
-let randomInRange = function (from, to) {
+let randomInRange = function(from, to) {
     return Math.floor(Math.random() * (to - from)) + from;
 };
 let ALPHA_CHAR_CODES = [48, 49, 50, 51, 52, 53, 54,
-    55, 56, 57, 65, 66, 67, 68, 69, 70];
-let createUID = function () {
+    55, 56, 57, 65, 66, 67, 68, 69, 70
+];
+let createUID = function() {
     let uid = new Array(36);
     let index = 0;
 
@@ -144,7 +147,7 @@ const NUM_DAY = 86400;
  * 输出结果formatDataStr=36天14小时00Second
  * 
  */
-let countTimeFormatter = function (millisecond, formatStr, keepZero, fillZero) {
+let countTimeFormatter = function(millisecond, formatStr, keepZero, fillZero) {
     formatStr = formatStr || "#h:#i:#s";
     keepZero = keepZero === undefined ? true : keepZero;
     fillZero = fillZero === undefined ? true : fillZero;
@@ -182,8 +185,7 @@ let countTimeFormatter = function (millisecond, formatStr, keepZero, fillZero) {
 
         if (iHour < 0 && iMinute < 0 && iSecond < 0 && liveHour > 0 && liveDay <= 0) {
             sDay += '1';
-        }
-        else {
+        } else {
             sDay += liveDay;
         }
         if ((sDay != "00" && sDay != "0") || keepZero)
@@ -198,8 +200,7 @@ let countTimeFormatter = function (millisecond, formatStr, keepZero, fillZero) {
             sHour = liveHour < 10 ? '0' : '';
         if (iMinute < 0 && liveHour <= 0 && liveMinute > 0) {
             sHour += '1';
-        }
-        else {
+        } else {
             sHour += liveHour;
         }
         if ((sHour != "00" && sHour != "0") || keepZero || sDay != "")
@@ -214,8 +215,7 @@ let countTimeFormatter = function (millisecond, formatStr, keepZero, fillZero) {
             sMinute = liveMinute < 10 ? '0' : '';
         if (iSecond < 0 && liveMinute <= 0 && liveSecond > 0) {
             sMinute += '1';
-        }
-        else {
+        } else {
             sMinute += liveMinute;
         }
         if ((sMinute != "00" && sMinute != "0") || keepZero || sHour != "")
@@ -228,17 +228,16 @@ let countTimeFormatter = function (millisecond, formatStr, keepZero, fillZero) {
             sSecond = liveSecond < 10 ? '0' : '';
         if (iMinute < 0 && liveSecond <= 0 && liveMilliSecond > 0) {
             sSecond += '1';
-        }
-        else {
+        } else {
             sSecond += liveSecond;
         }
         lowerStr = lowerStr.replace('#s', sSecond);
     }
     return lowerStr;
 };
-let countStringLength = function (str) {
+let countStringLength = function(str) {
     let strLen = str.length;
-    let charLen=0;
+    let charLen = 0;
     for (let i = 0; i < strLen; i++) {
         let charCode = str.charCodeAt(i);
         if (charCode > 255) {
@@ -249,7 +248,7 @@ let countStringLength = function (str) {
     }
     return charlen;
 };
-let substr = function (str, length, truncationSign) {
+let substr = function(str, length, truncationSign) {
     if (truncationSign == undefined) {
         truncationSign = "..."
     }
@@ -273,8 +272,11 @@ let substr = function (str, length, truncationSign) {
     }
     return result;
 };
-let trimString=function trimStr(str){
-    return str.replace(/(^\s*)|(\s*$)/g,"");
+let trimString = function trimStr(str) {
+    return str.replace(/(^\s*)|(\s*$)/g, "");
 }
+let easeOut = function(t, b, c, d) {
+    return c * ((t = t / d - 1) * t * t * t * t + 1) + b;
+};
 
-module.exports = { lineIsIntersectBody: lineIsIntersectBody, scientificToNumber: scientificToNumber, interpolate: interpolate, randomInRange: randomInRange, createUID: createUID, pointInPolygon: pointInPolygon, countTimeFormatter: countTimeFormatter, substr: substr ,countStringLength:countStringLength,trimString:trimString};
+module.exports = { lineIsIntersectBody: lineIsIntersectBody, scientificToNumber: scientificToNumber, interpolate: interpolate, randomInRange: randomInRange, createUID: createUID, pointInPolygon: pointInPolygon, countTimeFormatter: countTimeFormatter, substr: substr, countStringLength: countStringLength, trimString: trimString, easeOut: easeOut };

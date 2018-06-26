@@ -43,6 +43,9 @@ cc.Class({
         this._gameScene.sceneReadyCallBack = this._sceneReadyCallBack.bind(this);
         cc.log("game load.............................scene module");
         this._enterTestScene();
+
+        let testBtn = cc.find("testBtn", this.uiLayer);
+        testBtn.on(cc.Node.EventType.TOUCH_END, this._testSkillHandler, this);
     },
     messageHandler(msg) {
         switch (msg.actionType) {
@@ -67,13 +70,12 @@ cc.Class({
     _sceneReadyCallBack() {
         cc.log("ready..................................");
         cc.hj.panelMgr.closePanel(this._sceneLoading.id);
+        this._gameScene.sceneScale = 0.5;
         // let focusObj = new GameObject();
         // focusObj.posX = 3482;
         // focusObj.posY = 892;
         // this._gameScene.map.follow(focusObj);
         this._createMainPlayer();
-
-
         this._createTestMonsters();
     },
     _createTestMonsters: function() {
@@ -132,6 +134,8 @@ cc.Class({
         this._mainPlayer.render = this._gameScene.renderChar;
         this._mainPlayer.posX = 3482;
         this._mainPlayer.posY = 892;
+        this._mainPlayer.id = 1;
+        this._gameScene.characterHash[this._mainPlayer.id] = this._mainPlayer;
         this._mainPlayer.directionNum = 3;
         this._mainPlayer.alphaCheck = true;
         let graphicsR = new CharacterGraphics();
@@ -144,8 +148,68 @@ cc.Class({
         this._gameScene.addObject(this._mainPlayer);
 
         this._gameScene.map.follow(this._mainPlayer);
-
-    }
+    },
+    _testSkillHandler: function(evt) {
+        // if (skillData == 0) {
+        // let targets = this._gameScene.getAroundObjects(SceneConst.NPC, this._mainPlayer.pos, 200, this._mainPlayer);
+        // cc.log(targets);
+        // this._useSkillTest(0, this._mainPlayer, targets);
+        // } else {
+        // type = "", pos = null, radius = -1, exclude = null) {
+        let target = this._gameScene.getNearestObject(SceneConst.NPC, this._mainPlayer.pos, 300, this._mainPlayer);
+        if (target) {
+            this._useSkillTest(1, this._mainPlayer, target);
+        }
+        // }
+    },
+    _useSkillTest: function(type, attacker, attacked) {
+        let fightEnd = function(attacker, attacked) {}
+        SceneFightManager.getInstance().playSkillAction1(attacker.id, type == 0 ? null : attacked.id, 0, fightEnd, this);
+        this.scheduleOnce(function() {
+            if (type != 0) {
+                attacked.setBlood(Math.max(0, attacked.currentBlood - 10));
+                let harm = { attackerId: attacker.id, attackedId: attacked.id, value: 10, type: 1 }
+                SceneFightManager.getInstance().charHarm(harm);
+                if (attacked.currentBlood <= 0) {
+                    attacked.isDeath = true;
+                    this._gameScene.removeObject(attacked);
+                    delete this._gameScene.characterHash[attacked.id];
+                    if (this._gameScene.selectObject == attacked) {
+                        this._gameScene.setSelectObject(null);
+                    }
+                }
+            } else {
+                let self = this;
+                attacked.forEach(function(obj) {
+                    obj.setBlood(Math.max(0, obj.currentBlood - 10));
+                    let harm = { attackerId: attacker.id, attackedId: obj.id, value: 10, type: 1 }
+                    SceneFightManager.getInstance().charHarm(harm);
+                    if (obj.currentBlood <= 0) {
+                        obj.isDeath = true;
+                        self._gameScene.removeObject(obj);
+                        delete self._gameScene.characterHash[obj.id];
+                        if (self._gameScene.selectObject == obj) {
+                            self._gameScene.setSelectObject(null);
+                        }
+                    }
+                });
+            }
+            this._checkAndCreateMonster();
+        }, 0.1);
+    },
+    _checkAndCreateMonster: function() {
+        let curCount = 0;
+        for (let charId in this._gameScene.characterHash) {
+            let obj = this._gameScene.characterHash[charId];
+            if (obj.type == SceneConst.NPC) {
+                curCount++;
+            }
+        }
+        if (curCount < 10) {
+            this._monsterIdStart++;
+            this._createMonster(this._monsterIdStart);
+        }
+    },
 
 
 });

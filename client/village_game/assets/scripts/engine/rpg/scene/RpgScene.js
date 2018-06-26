@@ -223,7 +223,9 @@ cc.Class({
             list.push(obj);
             obj.inCamera = true;
             this._objectsLayerNode.addChild(obj.node);
-            obj.addStuffsToParent();
+            if (obj instanceof CharacterBase) {
+                obj.addStuffsToParent();
+            }
             let p = this._map.getScreenPosition(obj.posX, obj.posY);
             obj.node.setPosition(p.x, p.y);
         }
@@ -234,7 +236,9 @@ cc.Class({
         if (index >= 0) {
             if (obj.node.parent) {
                 this._objectsLayerNode.removeChild(obj.node);
-                obj.removeStuffsFromParent();
+                if (obj instanceof CharacterBase) {
+                    obj.removeStuffsFromParent();
+                }
             }
             list.splice(index, 1);
             obj.inCamera = false;
@@ -342,6 +346,9 @@ cc.Class({
                             }
                         });
                     }
+                }
+                if (obj.controller) {
+                    obj.controller.calAction(dt);
                 }
                 obj.renderLoop(dt);
             }, this);

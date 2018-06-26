@@ -15,24 +15,24 @@ cc.Class({
         _isPaused: false,
 
     },
-    ctor: function () {
+    ctor: function() {
         this._walkPathFragments = [];
     },
-    unsetupListener: function () {
+    unsetupListener: function() {
         RpgGlobal.scene.node.off(cc.Node.EventType.TOUCH_END, this._touchHandler, this);
     },
-    setupListener: function () {
+    setupListener: function() {
         RpgGlobal.scene.node.on(cc.Node.EventType.TOUCH_END, this._touchHandler, this);
     },
-    _touchHandler: function (evt) {
-        if(evt.currentTarget==RpgGlobal.scene.node){
+    _touchHandler: function(evt) {
+        if (evt.currentTarget == RpgGlobal.scene.node) {
             this.clearWalk();
             let local = RpgGlobal.scene.map.node.convertToNodeSpaceAR(evt.getLocation());
             let worldPos = RpgGlobal.scene.map.getWorldPosition(local.x, local.y);
-            this.walkTo(worldPos.x,worldPos.y,true);
+            this.walkTo(worldPos.x, worldPos.y, true);
         }
     },
-    clearPath: function () {
+    clearPath: function() {
         if (!this._me.isDeath) {
             if (this._me.action = Actions.Walk) {
                 this._me.action = Actions.Stand;
@@ -45,7 +45,7 @@ cc.Class({
         this.clearWalk();
     },
     //走完所有路径后调用
-    clearWalk: function () {
+    clearWalk: function() {
         this._callInWalk = null;
         this._callInWalkDist = 5;
         this._callAfterWalk = null;
@@ -53,15 +53,15 @@ cc.Class({
         this._nextTarget = null;
     },
     /**
-	* 移动到某点,寻路
-	* @param dx
-	* @param dy
-	* @param AStar是否需要寻路
-	* @param callAfterWalk
-	* @param callInWalk
-	* @param callDist
-	*/
-    walkTo: function (dx, dy, AStar = false, callAfterWalk = null, callInWalk = null, callInWalkDist = 5) {
+     * 移动到某点,寻路
+     * @param dx
+     * @param dy
+     * @param AStar是否需要寻路
+     * @param callAfterWalk
+     * @param callInWalk
+     * @param callDist
+     */
+    walkTo: function(dx, dy, AStar = false, callAfterWalk = null, callInWalk = null, callInWalkDist = 5) {
         if (this._me.isDeath)
             return false;
         if (dx < 0) dx = 0;
@@ -70,20 +70,19 @@ cc.Class({
         this._endPoint.y = dy;
         this._callInWalk = callInWalk;
         this._callAfterWalk = callAfterWalk;
-        if (cc.pDistance(this._endPoint, this._me.pos) <= RpgGlobal.GRID_SIZE * 0.5)//距离很近，直接回调
+        if (cc.pDistance(this._endPoint, this._me.pos) <= RpgGlobal.GRID_SIZE * 0.5) //距离很近，直接回调
         {
             this._me.faceToPoint(this._endPoint.x, this._endPoint.y);
             if (callInWalk != null) callInWalk.apply(null);
-            setTimeout(this.walkFinished.bind(this),1);
+            setTimeout(this.walkFinished.bind(this), 1);
             return false;
         }
         this._callInWalkDist = callInWalkDist;
 
         let paths;
-        if (AStar){
+        if (AStar) {
             paths = this.getPath(this._me.pos, this._endPoint);
-        }
-        else{
+        } else {
             paths = [this._me.pos.clone(), this._endPoint];
         }
         this._walkPathFragments.splice(0, this._walkPathFragments.length);
@@ -91,23 +90,22 @@ cc.Class({
             this.pathCutter(paths);
             this.walkNextPart();
             return true;
-        }
-        else {
+        } else {
             this._me.faceToPoint(this._endPoint.x, this._endPoint.y);
             if (callInWalk != null) callInWalk.apply(null);
-            setTimeout(this.walkFinished.bind(this),1);
+            setTimeout(this.walkFinished.bind(this), 1);
             return false;
         }
     },
-    isStatic: function () {
+    isStatic: function() {
         if (!this._me) return false;
         if (this._me.isDeath) return true;
         return false;
     },
-    calAction: function (dt) {
+    calAction: function(dt) {
         if (this._isPaused || this.isStatic()) return;
         if (this._nextTarget != null) {
-            this._timePassed += dt*1000;
+            this._timePassed += dt * 1000;
             if (this._timePassed > 0) {
                 let speed = this._me.speed;
                 let dx = this._nextTarget.x - this._me.posX;
@@ -126,7 +124,7 @@ cc.Class({
                 let yspeed = vs * Math.sin(angle);
                 this.moveTo(Number(Number((this._me.posX + xspeed).toFixed(1))), Number(Number((this._me.posY + yspeed).toFixed(1))));
                 dis = cc.pDistance(this._me.pos, this._nextTarget);
-                if (this._callInWalk != null && cc.pDistance(this._me.pos, this._endPoint) <= this._callInWalkDist) {//走动到规定的范围内回调
+                if (this._callInWalk != null && cc.pDistance(this._me.pos, this._endPoint) <= this._callInWalkDist) { //走动到规定的范围内回调
                     this._callInWalk.call(null);
                 }
                 if (dis <= 1) {
@@ -137,8 +135,7 @@ cc.Class({
                         if (this._nextTarget) {
                             this._me.directionNum = this.getDirectionByPoint(this._nextTarget.x, this._nextTarget.y);
                         }
-                    }
-                    else {
+                    } else {
                         this._me.setPos(this._nextTarget.x, this._nextTarget.y);
                         this.walkNextPart();
                     }
@@ -149,7 +146,7 @@ cc.Class({
             }
         }
     },
-    moveTo: function (nextX, nextY) {
+    moveTo: function(nextX, nextY) {
         if (this._me.posX != nextX || this._me.posY != nextY) {
             this._me.setPos(nextX, nextY);
             if (this._me.action != Actions.Attack) {
@@ -157,7 +154,7 @@ cc.Class({
             }
         }
     },
-    walkNextPart: function () {
+    walkNextPart: function() {
         this._timePassed = 0;
         this._nextTarget = null;
         let path_ = this._walkPathFragments.shift();
@@ -170,7 +167,7 @@ cc.Class({
                 }
                 if (this._nextTarget != null) {
                     this._preTarget = this._me.pos;
-                    if (this._me == RpgGlobal.scene.player) {//当前控制中的玩家才发数据//// 向服务器发送同步数据
+                    if (this._me == RpgGlobal.scene.player) { //当前控制中的玩家才发数据//// 向服务器发送同步数据
                         this.tellServerMove(path_);
                     }
                     if (!this._isPaused) {
@@ -181,12 +178,11 @@ cc.Class({
             } else {
                 this.walkNextPart();
             }
-        }
-        else {//没有路径可走，走动结束
+        } else { //没有路径可走，走动结束
             this.walkFinished();
         }
     },
-    pathCutter: function (array, size = 70, part = 350) {
+    pathCutter: function(array, size = 70, part = 350) {
         let paths = [];
         let len = array.length;
         if (len >= 2) {
@@ -205,7 +201,7 @@ cc.Class({
                     newPoint.x = Math.round(newPoint.x);
                     newPoint.y = Math.round(newPoint.y);
                     let lastPoint = paths[paths.length - 1];
-                    if (newPoint.x != lastPoint.x || newPoint.y != lastPoint.y) {//和上一个点位置不同
+                    if (newPoint.x != lastPoint.x || newPoint.y != lastPoint.y) { //和上一个点位置不同
                         paths.push(newPoint);
                     }
                     if (num * (j + 1) > 1) {
@@ -231,9 +227,8 @@ cc.Class({
             }
         }
     },
-    tellServerMove: function (path) {
-    },
-    walkFinished: function () {
+    tellServerMove: function(path) {},
+    walkFinished: function() {
         var _tmp = this._callAfterWalk;
         if (_tmp != null) {
             if (_tmp.length == 0)
@@ -243,11 +238,11 @@ cc.Class({
         }
         this._me.action = Actions.Stand;
     },
-    pause: function () {
+    pause: function() {
         this._isPaused = true;
         this._me.action = Actions.Stand;
     },
-    restart: function () {
+    restart: function() {
         this._isPaused = false;
         this._timePassed = 0;
     }

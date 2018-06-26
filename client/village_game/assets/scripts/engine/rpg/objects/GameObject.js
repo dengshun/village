@@ -308,8 +308,10 @@ cc.Class({
     },
     dispose: function() {
         this._disposed = true;
-        this._graphics.dispose();
-        this._graphics = null;
+        if (this._graphics) {
+            this._graphics.dispose();
+            this._graphics = null;
+        }
         if (this._controller) {
             this.changeController(null);
         }

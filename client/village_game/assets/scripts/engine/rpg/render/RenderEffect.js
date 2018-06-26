@@ -6,7 +6,9 @@ let RenderNCharacter = cc.Class({
     render: function(dt, target) {
         let p = RpgGlobal.scene.map.getScreenPosition(target.posX, target.posY);
         target.node.setPosition(p.x, p.y);
-        target.graphicsRes.render(dt, [target.bodyNode]);
+        if (target.graphicsRes) {
+            target.graphicsRes.render(dt, [target.bodyNode]);
+        }
     },
 });
 module.exports = RenderNCharacter;
