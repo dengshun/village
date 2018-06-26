@@ -70,7 +70,7 @@ cc.Class({
     _sceneReadyCallBack() {
         cc.log("ready..................................");
         cc.hj.panelMgr.closePanel(this._sceneLoading.id);
-        this._gameScene.sceneScale = 0.5;
+        // this._gameScene.sceneScale = 0.5;
         // let focusObj = new GameObject();
         // focusObj.posX = 3482;
         // focusObj.posY = 892;
@@ -151,15 +151,15 @@ cc.Class({
     },
     _testSkillHandler: function(evt) {
         // if (skillData == 0) {
-        // let targets = this._gameScene.getAroundObjects(SceneConst.NPC, this._mainPlayer.pos, 200, this._mainPlayer);
-        // cc.log(targets);
-        // this._useSkillTest(0, this._mainPlayer, targets);
+        let targets = this._gameScene.getAroundObjects(SceneConst.NPC, this._mainPlayer.pos, 200, this._mainPlayer);
+        cc.log(targets);
+        this._useSkillTest(0, this._mainPlayer, targets);
         // } else {
         // type = "", pos = null, radius = -1, exclude = null) {
-        let target = this._gameScene.getNearestObject(SceneConst.NPC, this._mainPlayer.pos, 300, this._mainPlayer);
-        if (target) {
-            this._useSkillTest(1, this._mainPlayer, target);
-        }
+        // let target = this._gameScene.getNearestObject(SceneConst.NPC, this._mainPlayer.pos, 300, this._mainPlayer);
+        // if (target) {
+        //     this._useSkillTest(1, this._mainPlayer, target);
+        // }
         // }
     },
     _useSkillTest: function(type, attacker, attacked) {
@@ -174,9 +174,6 @@ cc.Class({
                     attacked.isDeath = true;
                     this._gameScene.removeObject(attacked);
                     delete this._gameScene.characterHash[attacked.id];
-                    if (this._gameScene.selectObject == attacked) {
-                        this._gameScene.setSelectObject(null);
-                    }
                 }
             } else {
                 let self = this;
@@ -188,9 +185,6 @@ cc.Class({
                         obj.isDeath = true;
                         self._gameScene.removeObject(obj);
                         delete self._gameScene.characterHash[obj.id];
-                        if (self._gameScene.selectObject == obj) {
-                            self._gameScene.setSelectObject(null);
-                        }
                     }
                 });
             }
@@ -205,6 +199,7 @@ cc.Class({
                 curCount++;
             }
         }
+        cc.log("--==============================", curCount);
         if (curCount < 10) {
             this._monsterIdStart++;
             this._createMonster(this._monsterIdStart);

@@ -308,6 +308,14 @@ cc.Class({
     },
     dispose: function() {
         this._disposed = true;
+        let sf = this._bodyNode.getComponent(cc.Sprite);
+        if (sf) {
+            sf.destroy();
+        }
+        let sp = this._bodyNode.getComponent("sp.Skeleton");
+        if (sp) {
+            sp.destroy();
+        }
         if (this._graphics) {
             this._graphics.dispose();
             this._graphics = null;

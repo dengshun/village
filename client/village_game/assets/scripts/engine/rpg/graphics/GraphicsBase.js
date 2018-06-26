@@ -196,7 +196,11 @@ let GraphicsBase = cc.Class({
                     }
                 }
                 if (spriteFrame) {
-                    target.getComponent(cc.Sprite).spriteFrame = spriteFrame;
+                    let sp = target.getComponent(cc.Sprite);
+                    if (!sp) {
+                        sp = target.addComponent(cc.Sprite);
+                    }
+                    sp.spriteFrame = spriteFrame;
                     if (directionNum < 0) {
                         target.scaleX = -1;
                     } else {
