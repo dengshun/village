@@ -173,7 +173,7 @@ cc.Class({
         }
     },
     _autoChangeAction: function() {
-        if (this._action != Actions.Death) {
+        if (this._action != Actions.Death && this._action != Actions.Walk) {
             this.action = Actions.Stand;
         }
     },

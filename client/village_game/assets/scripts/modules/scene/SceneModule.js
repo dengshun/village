@@ -4,14 +4,15 @@ let GameObject = require("GameObject");
 
 const GameObjectFactory = require("GameObjectFactory");
 const SceneConst = require("SceneConst");
-const GraphicsBase = require("GraphicsBase");
+const FrameGraphicsBase = require("FrameGraphicsBase");
 const BounceFontsManager = require("BounceFontsManager");
 const Direction = require("Direction");
 const SceneManager = require("SceneManager");
 const SceneFightManager = require("SceneFightManager");
 const GraphicsManager = require("GraphicsManager");
 const CharacterController = require("CharacterController");
-const CharacterGraphics = require("CharacterGraphics");
+const FrameCharGraphics = require("FrameCharGraphics");
+const SpineGraphicsBase = require("SpineGraphicsBase");
 cc.Class({
     extends: BaseModule,
     properties: {
@@ -98,8 +99,13 @@ cc.Class({
         monster.directionNum = directionNum;
         monster.alphaCheck = false;
         monster.autoCulling = false;
-        let graphicsR = new GraphicsBase();
-        graphicsR.addPart(SceneConst.BODY_TYPE, 11102);
+        // let graphicsR = new FrameGraphicsBase();
+        // graphicsR.addPart(SceneConst.BODY_TYPE, 11102);
+        // monster.graphicsRes = graphicsR;
+
+        let graphicsR = new SpineGraphicsBase();
+        graphicsR.addPart(SceneConst.BODY_TYPE, 1);
+        monster.node.scale = 0.2;
         monster.graphicsRes = graphicsR;
 
         let hpBar = GameObjectFactory.getInstance().getObject(SceneConst.STUFF_HP).getComponent("BloodBar");
@@ -138,9 +144,16 @@ cc.Class({
         this._gameScene.characterHash[this._mainPlayer.id] = this._mainPlayer;
         this._mainPlayer.directionNum = 3;
         this._mainPlayer.alphaCheck = true;
-        let graphicsR = new CharacterGraphics();
-        graphicsR.addPart(SceneConst.BODY_TYPE, 100001);
-        graphicsR.addPart(SceneConst.WEAPON_TYPE, 200001);
+        // let graphicsR = new FrameCharGraphics();
+        // graphicsR.addPart(SceneConst.BODY_TYPE, 100001);
+        // graphicsR.addPart(SceneConst.WEAPON_TYPE, 200001);
+
+
+        let graphicsR = new SpineGraphicsBase();
+        graphicsR.addPart(SceneConst.BODY_TYPE, 1);
+        this._mainPlayer.node.scale = 0.2;
+
+
         this._mainPlayer.graphicsRes = graphicsR;
         this._mainPlayer.inCamera = true;
         this._mainPlayer.autoCulling = false;

@@ -1,0 +1,46 @@
+{
+  "avatar": {
+    "id": "eid_700001",
+    "blendMode": "normal",
+    "action": [
+      {
+        "id": "stand",
+        "frames": "2",
+        "speed": "120",
+        "replay": "-1",
+        "bytesTotal": "5910",
+        "dir": [
+          {
+            "dir": "0",
+            "frame": [
+              {
+                "frame": "0",
+                "width": "77",
+                "height": "48",
+                "tx": "38",
+                "ty": "24",
+                "speed": "120",
+                "linkage": "0",
+                "offsetX": "0",
+                "offsetY": "0",
+                "rotation": "0"
+              },
+              {
+                "frame": "1",
+                "width": "68",
+                "height": "42",
+                "tx": "34",
+                "ty": "21",
+                "speed": "120",
+                "linkage": "1",
+                "offsetX": "0",
+                "offsetY": "0",
+                "rotation": "0"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

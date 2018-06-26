@@ -1,0 +1,282 @@
+{
+  "avatar": {
+    "id": "eid_800001",
+    "blendMode": "normal",
+    "action": [
+      {
+        "id": "stand",
+        "frames": "4",
+        "speed": "100",
+        "replay": "1",
+        "bytesTotal": "331273",
+        "dir": [
+          {
+            "dir": "0",
+            "frame": [
+              {
+                "frame": "0",
+                "width": "90",
+                "height": "33",
+                "tx": "-11",
+                "ty": "118",
+                "speed": "100",
+                "linkage": "0",
+                "offsetX": "0",
+                "offsetY": "0",
+                "rotation": "0"
+              },
+              {
+                "frame": "1",
+                "width": "157",
+                "height": "77",
+                "tx": "71",
+                "ty": "92",
+                "speed": "100",
+                "linkage": "1",
+                "offsetX": "0",
+                "offsetY": "0",
+                "rotation": "0"
+              },
+              {
+                "frame": "2",
+                "width": "109",
+                "height": "170",
+                "tx": "-5",
+                "ty": "255",
+                "speed": "100",
+                "linkage": "2",
+                "offsetX": "0",
+                "offsetY": "0",
+                "rotation": "0"
+              },
+              {
+                "frame": "3",
+                "width": "105",
+                "height": "185",
+                "tx": "-6",
+                "ty": "270",
+                "speed": "100",
+                "linkage": "3",
+                "offsetX": "0",
+                "offsetY": "0",
+                "rotation": "0"
+              }
+            ]
+          },
+          {
+            "dir": "1",
+            "frame": [
+              {
+                "frame": "0",
+                "width": "7",
+                "height": "7",
+                "tx": "-11",
+                "ty": "92",
+                "speed": "100",
+                "linkage": "0",
+                "offsetX": "0",
+                "offsetY": "0",
+                "rotation": "0"
+              },
+              {
+                "frame": "1",
+                "width": "225",
+                "height": "82",
+                "tx": "140",
+                "ty": "121",
+                "speed": "100",
+                "linkage": "1",
+                "offsetX": "0",
+                "offsetY": "0",
+                "rotation": "0"
+              },
+              {
+                "frame": "2",
+                "width": "229",
+                "height": "127",
+                "tx": "52",
+                "ty": "151",
+                "speed": "100",
+                "linkage": "2",
+                "offsetX": "0",
+                "offsetY": "0",
+                "rotation": "0"
+              },
+              {
+                "frame": "3",
+                "width": "284",
+                "height": "180",
+                "tx": "-5",
+                "ty": "209",
+                "speed": "100",
+                "linkage": "3",
+                "offsetX": "0",
+                "offsetY": "0",
+                "rotation": "0"
+              }
+            ]
+          },
+          {
+            "dir": "2",
+            "frame": [
+              {
+                "frame": "0",
+                "width": "7",
+                "height": "7",
+                "tx": "-11",
+                "ty": "92",
+                "speed": "100",
+                "linkage": "0",
+                "offsetX": "0",
+                "offsetY": "0",
+                "rotation": "0"
+              },
+              {
+                "frame": "1",
+                "width": "149",
+                "height": "160",
+                "tx": "126",
+                "ty": "206",
+                "speed": "100",
+                "linkage": "1",
+                "offsetX": "0",
+                "offsetY": "0",
+                "rotation": "0"
+              },
+              {
+                "frame": "2",
+                "width": "244",
+                "height": "173",
+                "tx": "1",
+                "ty": "162",
+                "speed": "100",
+                "linkage": "2",
+                "offsetX": "0",
+                "offsetY": "0",
+                "rotation": "0"
+              },
+              {
+                "frame": "3",
+                "width": "280",
+                "height": "190",
+                "tx": "6",
+                "ty": "167",
+                "speed": "100",
+                "linkage": "3",
+                "offsetX": "0",
+                "offsetY": "0",
+                "rotation": "0"
+              }
+            ]
+          },
+          {
+            "dir": "3",
+            "frame": [
+              {
+                "frame": "0",
+                "width": "7",
+                "height": "7",
+                "tx": "-11",
+                "ty": "92",
+                "speed": "100",
+                "linkage": "0",
+                "offsetX": "0",
+                "offsetY": "0",
+                "rotation": "0"
+              },
+              {
+                "frame": "1",
+                "width": "121",
+                "height": "191",
+                "tx": "102",
+                "ty": "239",
+                "speed": "100",
+                "linkage": "1",
+                "offsetX": "0",
+                "offsetY": "0",
+                "rotation": "0"
+              },
+              {
+                "frame": "2",
+                "width": "309",
+                "height": "220",
+                "tx": "123",
+                "ty": "152",
+                "speed": "100",
+                "linkage": "2",
+                "offsetX": "0",
+                "offsetY": "0",
+                "rotation": "0"
+              },
+              {
+                "frame": "3",
+                "width": "210",
+                "height": "219",
+                "tx": "-11",
+                "ty": "117",
+                "speed": "100",
+                "linkage": "3",
+                "offsetX": "0",
+                "offsetY": "0",
+                "rotation": "0"
+              }
+            ]
+          },
+          {
+            "dir": "4",
+            "frame": [
+              {
+                "frame": "0",
+                "width": "7",
+                "height": "7",
+                "tx": "-11",
+                "ty": "92",
+                "speed": "100",
+                "linkage": "0",
+                "offsetX": "0",
+                "offsetY": "0",
+                "rotation": "0"
+              },
+              {
+                "frame": "1",
+                "width": "218",
+                "height": "162",
+                "tx": "119",
+                "ty": "247",
+                "speed": "100",
+                "linkage": "1",
+                "offsetX": "0",
+                "offsetY": "0",
+                "rotation": "0"
+              },
+              {
+                "frame": "2",
+                "width": "95",
+                "height": "292",
+                "tx": "55",
+                "ty": "211",
+                "speed": "100",
+                "linkage": "2",
+                "offsetX": "0",
+                "offsetY": "0",
+                "rotation": "0"
+              },
+              {
+                "frame": "3",
+                "width": "88",
+                "height": "289",
+                "tx": "69",
+                "ty": "180",
+                "speed": "100",
+                "linkage": "3",
+                "offsetX": "0",
+                "offsetY": "0",
+                "rotation": "0"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

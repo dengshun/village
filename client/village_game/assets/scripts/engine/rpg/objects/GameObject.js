@@ -226,11 +226,15 @@ cc.Class({
     },
     onLoad: function() {
         this._bodyNode = cc.find("body", this.node);
+        if (this._graphics) {
+            this._graphics.bodyNode = this._bodyNode;
+        }
     },
     renew: function(...args) {
         if (this._disposed) {
             this._disposed = false;
             this.node.opacity = 255;
+            this.node.setScale(1.0);
             this._bodyNode.opacity = 255;
             this._render = null;
             this._graphics = null;
@@ -312,7 +316,7 @@ cc.Class({
         if (sf) {
             sf.destroy();
         }
-        let sp = this._bodyNode.getComponent("sp.Skeleton");
+        let sp = this._bodyNode.getComponent(sp.Skeleton);
         if (sp) {
             sp.destroy();
         }
