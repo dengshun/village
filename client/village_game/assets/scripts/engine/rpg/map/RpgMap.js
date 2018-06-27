@@ -173,7 +173,13 @@ var RpgMap = cc.Class({
         // if (newP == null) {
         //     return;
         // }
+        this._lastRenderPoint.x = this._centerPoint.x;
+        this._lastRenderPoint.y = this._centerPoint.y;
         let newP = this._focusObject.pos;
+        if (newP) {
+            this._centerPoint.x = newP.x;
+            this._centerPoint.y = newP.y;
+        }
         let startX_ = this.startX;
         let startY_ = this.startY;
         let visibleSize = this._mapVisibleSize;
@@ -182,12 +188,6 @@ var RpgMap = cc.Class({
         this._cameraCullingView.width = visibleSize.width;
         this._cameraCullingView.height = visibleSize.height;
 
-        this._lastRenderPoint.x = this._centerPoint.x;
-        this._lastRenderPoint.y = this._centerPoint.y;
-        if (newP) {
-            this._centerPoint.x = newP.x;
-            this._centerPoint.y = newP.y;
-        }
         this._loadingList.splice(0, this._loadingList.length);
         let startRow = Math.floor(startY_ / this._tileHeight);
         let startCol = Math.floor(startX_ / this._tileWidth);
