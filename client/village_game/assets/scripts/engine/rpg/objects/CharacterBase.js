@@ -163,6 +163,7 @@ cc.Class({
             this._action = Actions.Stand;
             this._isAutoChangeAction = true;
             this.isDeath = false;
+            this._explicitStuffOffsetY = null;
         }
     },
     _renderHandler: function(dt) {

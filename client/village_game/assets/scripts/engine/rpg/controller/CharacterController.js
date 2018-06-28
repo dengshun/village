@@ -13,23 +13,32 @@ cc.Class({
         _timePassed: 0,
         _touchPoint: cc.v2(0, 0),
         _isPaused: false,
+        _touchStartTimer: 0,
 
     },
     ctor: function() {
         this._walkPathFragments = [];
     },
     unsetupListener: function() {
+        RpgGlobal.scene.node.off(cc.Node.EventType.TOUCH_START, this._touchStartHandler, this);
         RpgGlobal.scene.node.off(cc.Node.EventType.TOUCH_END, this._touchHandler, this);
     },
     setupListener: function() {
+        RpgGlobal.scene.node.on(cc.Node.EventType.TOUCH_START, this._touchStartHandler, this);
         RpgGlobal.scene.node.on(cc.Node.EventType.TOUCH_END, this._touchHandler, this);
     },
+    _touchStartHandler: function() {
+        this._touchStartTimer = new Date().getTime();
+    },
     _touchHandler: function(evt) {
-        if (evt.currentTarget == RpgGlobal.scene.node) {
-            this.clearWalk();
-            let local = RpgGlobal.scene.map.node.convertToNodeSpaceAR(evt.getLocation());
-            let worldPos = RpgGlobal.scene.map.getWorldPosition(local.x, local.y);
-            this.walkTo(worldPos.x, worldPos.y, true);
+        let endTimer = new Date().getTime();
+        if (endTimer - this._touchStartTimer <= 300) {
+            if (evt.currentTarget == RpgGlobal.scene.node) {
+                this.clearWalk();
+                let local = RpgGlobal.scene.map.node.convertToNodeSpaceAR(evt.getLocation());
+                let worldPos = RpgGlobal.scene.map.getWorldPosition(local.x, local.y);
+                this.walkTo(worldPos.x, worldPos.y, true);
+            }
         }
     },
     clearPath: function() {
@@ -182,7 +191,7 @@ cc.Class({
             this.walkFinished();
         }
     },
-    pathCutter: function(array, size = 70, part = 350) {
+    pathCutter: function(array, size = 64, part = 320) {
         let paths = [];
         let len = array.length;
         if (len >= 2) {

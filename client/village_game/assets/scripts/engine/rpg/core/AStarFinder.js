@@ -10,20 +10,20 @@ let AStarFinder = cc.Class({
         /**A***/
         _astar: AStar,
         /**格子大小**/
-        _cellSize: 35,
+        _cellSize: 32,
         /**是否使用Floyd 算法寻找最短路径**/
         _isFloydPath: true,
         isFloydPath: {
-            set: function (value) {
+            set: function(value) {
                 this._isFloydPath = value;
             },
-            get: function () {
+            get: function() {
                 return this._isFloydPath;
             }
         }
 
     },
-    __ctor__(mapdata, workMode = 8, cellSize = 35) {
+    __ctor__(mapdata, workMode = 8, cellSize = 32) {
         this._cellSize = cellSize;
         this._workMode = workMode;
         this.makeGrid(mapdata);
@@ -64,8 +64,7 @@ let AStarFinder = cc.Class({
         if (xto >= xnow) {
             this._grid.setEndNode(xto, yto);
             this._grid.setStartNode(xnow, ynow);
-        }
-        else {
+        } else {
             _needReverse = true;
             this._grid.setEndNode(xnow, ynow);
             this._grid.setStartNode(xto, yto);
@@ -125,8 +124,7 @@ let AStarFinder = cc.Class({
             if (this._isFloydPath) {
                 this._astar.floyd();
                 this._path = this._astar.floydPath;
-            }
-            else
+            } else
                 this._path = this._astar.path;
             if (needReverse)
                 this._path.reverse();
@@ -162,8 +160,7 @@ let AStarFinder = cc.Class({
             return 0xcccccc;
         return 0xffffff;
     },
-    dispose() {
-    },
+    dispose() {},
 });
 
 let AStar = cc.Class({
@@ -174,20 +171,20 @@ let AStar = cc.Class({
         _startNode: ANode,
         _path: Array,
         _floydPath: Array,
-        _heuristic: Function,//估计公式
-        _straightCost: 1.0,//直线代价
+        _heuristic: Function, //估计公式
+        _straightCost: 1.0, //直线代价
         _diagCost: 0, //对角线代价
-        _turnPenalty: 1,//转弯代价
+        _turnPenalty: 1, //转弯代价
         _nowversion: 1,
         /**寻路方式，8方向和4方向，有效值为8和4**/
         _workMode: 8,
         path: {
-            get: function () {
+            get: function() {
                 return this._path;
             }
         },
         floydPath: {
-            get: function () {
+            get: function() {
                 return this._floydPath;
             }
         },
@@ -218,14 +215,14 @@ let AStar = cc.Class({
         let i;
         let len;
         len = this._floydPath.length;
-        if (len > 2)//合并同一条线上的点
+        if (len > 2) //合并同一条线上的点
         {
             //遍历路径数组中全部路径节点，合并在同一直线上的路径节点
             //假设有1,2,3,三点，若2与1的横、纵坐标差值分别与3与2的横、纵坐标差值相等则
             //判断此三点共线，此时可以删除中间点2
-            let vector = new ANode(0, 0);//上一步方向
-            let tempVector = new ANode(0, 0);//当前步方向
-            let tempVectorWill = new ANode(0, 0);//下一步的走向
+            let vector = new ANode(0, 0); //上一步方向
+            let tempVector = new ANode(0, 0); //当前步方向
+            let tempVectorWill = new ANode(0, 0); //下一步的走向
             let directionChanged;
             this.floydVector(vector, this._floydPath[len - 1], this._floydPath[len - 2]);
             for (i = this._floydPath.length - 3; i >= 0; i--) {
@@ -233,11 +230,10 @@ let AStar = cc.Class({
                 if (i >= 1)
                     this.floydVector(tempVectorWill, this._floydPath[i], this._floydPath[i - 1]);
                 if ((vector.x == tempVector.x && vector.y == tempVector.y) && directionChanged == false &&
-                    (tempVectorWill.x == tempVector.x && tempVectorWill.y == tempVector.y))//刚刚改变方向的点不合并,后面会合并成135度角
+                    (tempVectorWill.x == tempVector.x && tempVectorWill.y == tempVector.y)) //刚刚改变方向的点不合并,后面会合并成135度角
                 {
                     this._floydPath.splice(i + 1, 1);
-                }
-                else {
+                } else {
                     if (vector.x == tempVector.x && vector.y == tempVector.y)
                         directionChanged = !directionChanged;
                     else {
@@ -249,7 +245,7 @@ let AStar = cc.Class({
             }
         }
         //移除多余点，走斜线
-        if (this._workMode == 8)//8个方向才能走斜线
+        if (this._workMode == 8) //8个方向才能走斜线
         {
             len = this._floydPath.length;
             for (i = len - 1; i >= 0; i--) {
@@ -310,8 +306,7 @@ let AStar = cc.Class({
         let nowY = p1.y + deltay;
         if (steep) {
             ret.push(cc.p(p1.y, p1.x));
-        }
-        else {
+        } else {
             ret.push(cc.p(p1.x, p1.y));
         }
         while (nowX != p2.x) {
@@ -319,15 +314,13 @@ let AStar = cc.Class({
             let cy = Math.ceil(nowY);
             if (steep) {
                 ret.push(cc.p(fy, nowX));
-            }
-            else {
+            } else {
                 ret.push(cc.p(nowX, fy));
             }
             if (fy != cy) {
                 if (steep) {
                     ret.push(cc.p(cy, nowX));
-                }
-                else {
+                } else {
                     ret.push(cc.p(nowX, cy));
                 }
             }
@@ -336,8 +329,7 @@ let AStar = cc.Class({
         }
         if (steep) {
             ret.push(cc.p(p2.y, p2.x));
-        }
-        else {
+        } else {
             ret.push(cc.p(p2.x, p2.y));
         }
         return ret;
@@ -355,13 +347,13 @@ let AStar = cc.Class({
                 let link = node.links[i];
                 let test = link.node;
                 let cost = link.cost;
-                let g = node.g + cost;//起点到当前点的耗费
-                let h = this._heuristic(test);//当前点到终点的耗费
+                let g = node.g + cost; //起点到当前点的耗费
+                let h = this._heuristic(test); //当前点到终点的耗费
                 let c = 0;
                 if (!testFind) {
-                    c = this.redirection(node, test);//改变方向耗费
+                    c = this.redirection(node, test); //改变方向耗费
                 }
-                g = g + c;//走当前点的总耗费
+                g = g + c; //走当前点的总耗费
                 let f = g + h;
                 if (test.version == this._nowversion) {
                     if (test.f > f) {
@@ -370,8 +362,7 @@ let AStar = cc.Class({
                         test.h = h;
                         test.parent = node;
                     }
-                }
-                else {
+                } else {
                     test.f = f;
                     test.g = g;
                     test.h = h;
@@ -465,7 +456,7 @@ let BinaryHeap = cc.Class({
         if (justMinFun) {
             this.justMinFun = justMinFun;
         } else {
-            this.justMinFun = function (x, y) {
+            this.justMinFun = function(x, y) {
                 return x < y;
             }
         }
@@ -494,8 +485,7 @@ let BinaryHeap = cc.Class({
             let minp;
             if (sp2 < l) {
                 minp = this.justMinFun(this.a[sp2], this.a[sp1]) ? sp2 : sp1;
-            }
-            else {
+            } else {
                 minp = sp1;
             }
             if (this.justMinFun(this.a[minp], this.a[p])) {
@@ -505,8 +495,7 @@ let BinaryHeap = cc.Class({
                 p = minp;
                 sp1 = p << 1;
                 sp2 = sp1 + 1;
-            }
-            else {
+            } else {
                 break;
             }
         }
@@ -525,22 +514,22 @@ let Grid = cc.Class({
         _straightCost: 1.0,
         _diagCost: 0,
         endNode: {
-            get: function () {
+            get: function() {
                 return this._endNode;
             }
         },
         numCols: {
-            get: function () {
+            get: function() {
                 return this._numCols;
             }
         },
         numRows: {
-            get: function () {
+            get: function() {
                 return this._numRows;
             }
         },
         startNode: {
-            get: function () {
+            get: function() {
                 return this._startNode;
             }
         }
@@ -558,8 +547,8 @@ let Grid = cc.Class({
         }
     },
     /**
-	 * @param   type    0:四方向 1:八方向 
-	 */
+     * @param   type    0:四方向 1:八方向 
+     */
     calculateLinks(type = 1) {
         this._type = type;
         for (let i = 0; i < this._numCols; i++) {
@@ -571,10 +560,10 @@ let Grid = cc.Class({
     getType() {
         return this._type;
     },
-	/**
-	 * @param   node
-	 * @param   type   0:四方向 1:八方向 
-	 * 	 */
+    /**
+     * @param   node
+     * @param   type   0:四方向 1:八方向 
+     * 	 */
     initNodeLink(node, type = 1) {
         let startX = Math.max(0, node.x - 1);
         let endX = Math.min(this.numCols - 1, node.x + 1);
@@ -647,9 +636,9 @@ let ANode = cc.Class({
         this.x = x;
         this.y = y;
     },
-    toString:function(){
-        return "("+this.x+","+this.y+")"
+    toString: function() {
+        return "(" + this.x + "," + this.y + ")"
     }
 });
 
-module.exports=AStarFinder;
+module.exports = AStarFinder;

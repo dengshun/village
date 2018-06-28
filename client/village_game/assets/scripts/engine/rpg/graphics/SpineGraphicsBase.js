@@ -56,6 +56,21 @@ let SpineGraphicsBase = cc.Class({
             serializable: false,
             default: 0,
         },
+        _avatarHeight_: {
+            type: cc.Integer,
+            default: 80,
+            serializable: false,
+        },
+        avatarHeight: {
+            get: function() {
+                return this._avatarHeight_;
+            },
+            set: function(v) {
+                this._avatarHeight_ = v;
+            },
+            visible: false,
+            override: true,
+        }
 
     },
     ctor: function() {},

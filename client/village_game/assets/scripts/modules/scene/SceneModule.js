@@ -109,6 +109,7 @@ cc.Class({
         graphicsR.addPart(SceneConst.BODY_TYPE, 1);
         monster.node.scale = 0.2;
         monster.graphicsRes = graphicsR;
+        monster.stuffOffSetY = 80;
 
         let hpBar = GameObjectFactory.getInstance().getObject(SceneConst.STUFF_HP).getComponent("BloodBar");
         monster.hpBar = hpBar;

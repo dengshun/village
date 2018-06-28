@@ -1,36 +1,33 @@
 const RpgGlobal = require("RpgGlobal");
 var Square = cc.Class({
     properties: {
-        /**0:是否可走，1：是否是安全区，2：是否是摆摊区，3:是否是透明区，4:是否不可以跳,5：野外安全区,6：多倍经验1区,7：多倍经验2区，.......,15:特殊类型格子**/
+        /**0:是否可走，1:是否是透明区，.......,5:村庄区,6:野外区1,7:野外区2,8:野外区3,9:野外区4**/
+
         /**是否可以行走**/
         isCanWalk: false,
-        /**是否是摆摊区**/
-        isSell: false,
-        /**是否是安全区域**/
-        isSafe: false,
         /**是否是透明区域**/
         isAlpha: false,
-        /**是否是禁止跳跃区域**/
-        isBanJump: false,
-        /**特殊格子**/
-        isSpecial: false,
-        /**是否 是野外安全区**/
-        isField: false,
-        /**多倍经验区域1**/
-        isMultiExp1: false,
-        /**多倍经验区域2**/
-        isMultiExp2: false,
-        x:0,
-        y:0,
-        key:{
-            get:function(){
-                return this.x+"|"+this.y;
+        /**是否 是村庄区**/
+        isVill: false,
+        /**是否 是野外区1**/
+        isField1: false,
+        /**是否 是野外区2**/
+        isField2: false,
+        /**是否 是野外区3**/
+        isField3: false,
+        /**是否 是野外区4**/
+        isField4: false,
+        x: 0,
+        y: 0,
+        key: {
+            get: function() {
+                return this.x + "|" + this.y;
             }
         }
     },
-    __ctor__:function(x,y){
-        this.x=x;
-        this.y=y;
+    __ctor__: function(x, y) {
+        this.x = x;
+        this.y = y;
     },
 });
 var ItemData = cc.Class({
@@ -40,7 +37,7 @@ var ItemData = cc.Class({
     layer: 0,
     depth: 0,
 });
-var SquareMapData=cc.Class({
+var SquareMapData = cc.Class({
     properties: {
         map_id: 0,
         pixel_width: 0,
@@ -51,37 +48,35 @@ var SquareMapData=cc.Class({
         roadArray: null,
         _squaresHash: null,
     },
-    ctor: function () {
-    },
-    resetSquaresHash: function () {
+    ctor: function() {},
+    resetSquaresHash: function() {
         this._squaresHash = {};
     },
-    has: function (key) {
+    has: function(key) {
         if (this._squaresHash[key]) {
             return true;
         }
         return false;
     },
-    put: function (value) {
+    put: function(value) {
         this._squaresHash[value.key] = value;
     },
-    take: function (key) {
+    take: function(key) {
         return this._squaresHash[key];
     },
-    remove: function (key) {
+    remove: function(key) {
         delete this._squaresHash[key];
     },
-    prasePro: function (x, y, pro) {
-        let square = new Square(x,y);
+    prasePro: function(x, y, pro) {
+        let square = new Square(x, y);
+
         square.isCanWalk = (pro >> 15) == 1;
-        square.isSafe = ((pro >> 14) & 1) == 1;
-        square.isSell = ((pro >> 13) & 1) == 1;
-        square.isAlpha = ((pro >> 12) & 1) == 1;
-        square.isBanJump = ((pro >> 11) & 1) == 1;
-        square.isField = ((pro >> 10) & 1) == 1;
-        square.isMultiExp1 = ((pro >> 9) & 1) == 1;
-        square.isMultiExp2 = ((pro >> 8) & 1) == 1;
-        square.isSpecial = (pro & 1) == 1;
+        square.isAlpha = ((pro >> 14) & 1) == 1;
+        square.isVill = ((pro >> 10) & 1) == 1;
+        square.isField1 = ((pro >> 9) & 1) == 1;
+        square.isField2 = ((pro >> 8) & 1) == 1;
+        square.isField3 = ((pro >> 7) & 1) == 1;
+        square.isField4 = ((pro >> 6) & 1) == 1;
 
         return square;
     },
@@ -94,7 +89,7 @@ var SquareMapData=cc.Class({
         itemData.depth = pro.readShort();
         return itemData;
     },
-    resetRoad: function () {
+    resetRoad: function() {
         // 定义临时地图数据
         let h = Math.ceil(this.pixel_height / RpgGlobal.GRID_SIZE);
         let w = Math.ceil(this.pixel_width / RpgGlobal.GRID_SIZE);
@@ -103,10 +98,10 @@ var SquareMapData=cc.Class({
             this.roadArray[y] = new Array(w);
         }
     },
-    updateRoadWalkable: function (x, y, walkable) {
+    updateRoadWalkable: function(x, y, walkable) {
         this.roadArray[y][x] = walkable ? 1 : 0;
     },
-    uncode: function (bytes) {
+    uncode: function(bytes) {
         this.resetSquaresHash();
         let square;
         let itemData;
@@ -129,7 +124,7 @@ var SquareMapData=cc.Class({
             x = bytes.readShort();
             y = bytes.readShort();
             square = this.prasePro(x, y, bytes.readUnsignedShort());
-            if (square.isCanWalk){
+            if (square.isCanWalk) {
                 this.roadArray[y][x] = 1;
             }
             this.put(square);
@@ -144,6 +139,6 @@ var SquareMapData=cc.Class({
         }
     }
 });
-SquareMapData.ItemData=ItemData;
-SquareMapData.Square=Square;
-module.exports=SquareMapData;
+SquareMapData.ItemData = ItemData;
+SquareMapData.Square = Square;
+module.exports = SquareMapData;
