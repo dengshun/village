@@ -61,6 +61,7 @@ cc.Class({
         let eId = evt.getID();
         let touchPoint = this._getPointByEventId(eId);
         let lastP = cc.v2(touchPoint.p);
+        let lastLastP = cc.v2(touchPoint.pLast);
         touchPoint.pLast = lastP;
         let curr = cc.v2(evt.getLocationX(), evt.getLocationY());
         touchPoint.p = curr;
@@ -71,10 +72,20 @@ cc.Class({
             if (pLen <= 1) {
                 let lastPNode = this.node.convertToNodeSpaceAR(lastP);
                 let currNode = this.node.convertToNodeSpaceAR(curr);
+                let dist = cc.pDistance(currNode, lastPNode);
+                if (dist < 12) {
+                    touchPoint.pLast = lastLastP;
+                    touchPoint.p = lastP;
+                    touchPoint.pUpdated = false;
+                    return;
+                }
                 let offsetX = currNode.x - lastPNode.x;
                 let offsetY = currNode.y - lastPNode.y;
+                let angle = Number(Number(Math.atan2(offsetY, offsetX).toFixed(2)));
+                let xspeed = dist * Math.cos(angle);
+                let yspeed = dist * Math.sin(angle);
                 let focusObject = this.map.focusObject;
-                focusObject.setPos(focusObject.posX - offsetX, focusObject.posY + offsetY);
+                focusObject.setPos(focusObject.posX - xspeed, focusObject.posY + yspeed);
                 this._validateFocusPosition();
             } else {
                 if (this._scalePoints) {

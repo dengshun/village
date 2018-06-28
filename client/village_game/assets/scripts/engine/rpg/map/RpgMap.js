@@ -93,7 +93,7 @@ var RpgMap = cc.Class({
         startX: {
             get: function() {
                 let visibleSize = this._mapVisibleSize;
-                let screen_startX = this._centerPoint.x - Math.floor(visibleSize.width / 2);
+                let screen_startX = this._centerPoint.x - visibleSize.width / 2;
                 screen_startX = Math.min(this._mapWidth - visibleSize.width, screen_startX);
                 screen_startX = Math.max(0, screen_startX);
                 return screen_startX;
@@ -103,7 +103,7 @@ var RpgMap = cc.Class({
         startY: {
             get: function() {
                 let visibleSize = this._mapVisibleSize;
-                let screen_startY = this._centerPoint.y - Math.floor(visibleSize.height / 2);
+                let screen_startY = this._centerPoint.y - visibleSize.height / 2;
                 screen_startY = Math.min(this._mapHeight - visibleSize.height, screen_startY);
                 screen_startY = Math.max(0, screen_startY);
                 return screen_startY;
@@ -160,13 +160,13 @@ var RpgMap = cc.Class({
             per = (dis - speed) / dis;
             tar = Utils.interpolate(this._centerPoint, this._focusObject.pos, per);
         }
-        // return this._focusObject.pos;
+        return this._focusObject.pos;
         return tar;
     },
     render: function() {
         // var newP = null;
         // if (this._focusObject) {
-        // newP = this.getFocusObjectPoint();
+        //     newP = this.getFocusObjectPoint();
         // } else {
         //     newP = this._centerPoint;
         // }

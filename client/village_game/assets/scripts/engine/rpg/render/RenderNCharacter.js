@@ -6,7 +6,7 @@ let RenderNCharacter = cc.Class({
     extends: Render,
     render: function(dt, target) {
         let p = RpgGlobal.scene.map.getScreenPosition(target.posX, target.posY);
-        target.node.setPosition(p.x, p.y);
+        target.node.setPosition(p.x >> 0, p.y >> 0);
         if (!(target.graphicsRes instanceof SpineGraphicsBase)) {
             target.graphicsRes.render(dt, [target.bodyNode]);
         }

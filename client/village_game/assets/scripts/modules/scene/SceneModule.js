@@ -71,11 +71,13 @@ cc.Class({
     _sceneReadyCallBack() {
         cc.log("ready..................................");
         cc.hj.panelMgr.closePanel(this._sceneLoading.id);
-        // this._gameScene.sceneScale = 0.5;
-        // let focusObj = new GameObject();
-        // focusObj.posX = 3482;
-        // focusObj.posY = 892;
-        // this._gameScene.map.follow(focusObj);
+        this._gameScene.sceneScale = 0.5;
+
+        let focusObj = new GameObject();
+        focusObj.posX = 3482;
+        focusObj.posY = 892;
+        this._gameScene.map.follow(focusObj);
+
         this._createMainPlayer();
         this._createTestMonsters();
     },
@@ -160,7 +162,7 @@ cc.Class({
         this._mainPlayer.changeController(new CharacterController());
         this._gameScene.addObject(this._mainPlayer);
 
-        this._gameScene.map.follow(this._mainPlayer);
+        // this._gameScene.map.follow(this._mainPlayer);
     },
     _testSkillHandler: function(evt) {
         // if (skillData == 0) {
