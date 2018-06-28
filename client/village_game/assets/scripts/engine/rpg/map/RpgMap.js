@@ -48,6 +48,8 @@ var RpgMap = cc.Class({
         _mapVisibleSize: cc.Size,
         _visibleRows: 1, //可视区域能显示的最大行数
         _visibleCols: 1, //可视区域能显示的最大列数
+        _visibleGridRows: 1,
+        _visibleGridCols: 1,
         _lastRenderPoint: cc.v2(0, 0),
         _centerPoint: cc.v2(0, 0), //地图中心点坐标
         _nowStartRow: 0,
@@ -274,6 +276,51 @@ var RpgMap = cc.Class({
             }
         }
     },
+    drawGrid: function(g) {
+        g.clear();
+        let gridSize = RpgGlobal.GRID_SIZE;
+
+        let startX_ = this.startX;
+        let startY_ = this.startY;
+
+        let startRow = Math.floor(startY_ / gridSize);
+        let startCol = Math.floor(startX_ / gridSize);
+        let offsetX = -startX_ % gridSize;
+        let offsetY = -startY_ % gridSize;
+        let maxRow = Math.min(startRow + this._visibleGridRows + 1, Math.ceil(this._mapHeight / gridSize));
+        let maxCol = Math.min(startCol + this._visibleGridCols + 1, Math.ceil(this._mapWidth / gridSize));
+        let exStartRow = Math.max(startRow - 1, 0);
+        let exStartCol = Math.max(startCol - 1, 0);
+        for (let i = exStartCol; i < maxCol; i++) {
+            for (let j = exStartRow; j < maxRow; j++) {
+                let key = i + "|" + j;
+                let square = this._sceneData.take(key);
+                if (square) {
+                    let sx = i * gridSize;
+                    let sy = j * gridSize;
+
+                    let p = this._getTileScreenPosition(offsetX + (i - startCol) * gridSize,
+                        offsetY + (j - startRow) * gridSize);
+
+                    var fillColor = new cc.Color(6, 142, 41, 190);
+                    g.fillColor = fillColor;
+                    var lineColor = new cc.Color(166, 10, 10, 255);
+                    g.strokeColor = lineColor;
+                    g.lineWidth = 2;
+                    g.moveTo(p.x, p.y);
+                    g.lineTo(p.x + gridSize, p.y);
+                    g.lineTo(p.x + gridSize, p.y - gridSize);
+                    g.lineTo(p.x, p.y - gridSize);
+                    g.lineTo(p.x, p.y);
+                    g.stroke();
+                    g.fill();
+                }
+
+            }
+        }
+
+
+    },
     grid2WorldPostion: function(px, py) {
         let p = cc.v2(0, 0);
         p.x = px * RpgGlobal.GRID_SIZE + RpgGlobal.GRID_SIZE * 0.5;
@@ -295,6 +342,8 @@ var RpgMap = cc.Class({
         this._mapVisibleSize.height = h;
         this._visibleCols = Math.ceil(this._mapVisibleSize.width / this._tileWidth);
         this._visibleRows = Math.ceil(this._mapVisibleSize.height / this._tileHeight);
+        this._visibleGridCols = Math.ceil(this._mapVisibleSize.width / RpgGlobal.GRID_SIZE);
+        this._visibleGridRows = Math.ceil(this._mapVisibleSize.height / RpgGlobal.GRID_SIZE);
     }
 
 });

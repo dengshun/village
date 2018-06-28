@@ -71,7 +71,7 @@ cc.Class({
     _sceneReadyCallBack() {
         cc.log("ready..................................");
         cc.hj.panelMgr.closePanel(this._sceneLoading.id);
-        this._gameScene.sceneScale = 0.5;
+        // this._gameScene.sceneScale = 0.5;
 
         let focusObj = new GameObject();
         focusObj.posX = 3482;

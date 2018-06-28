@@ -26,6 +26,11 @@ cc.Class({
             type: cc.Node,
             serializable: false,
         },
+        _gridLayerNode: {
+            default: null,
+            type: cc.Node,
+            serializable: false,
+        },
         _map: {
             default: null,
             type: RpgMap,
@@ -125,11 +130,24 @@ cc.Class({
             default: null,
             serializable: false,
         },
+        _gridVisible: {
+            default: true,
+            serializable: false,
+        },
+        gridVisible: {
+            set: function(value) {
+                this._gridVisible = value;
+            },
+            get: function() {
+                return this._gridVisible;
+            }
+        }
     },
     onLoad: function() {
         RpgGlobal.scene = this;
         this._mapLayerNode = cc.find("mapLayer", this.node);
         this._objectsLayerNode = cc.find("objectsLayer", this.node);
+        this._gridLayerNode = cc.find("gridLayer", this.node);
         this._map = this._mapLayerNode.getComponent("RpgMap");
         let visibleSize = cc.view.getVisibleSize();
         this.node.width = visibleSize.width;
@@ -138,6 +156,10 @@ cc.Class({
         this._mapLayerNode.height = visibleSize.height;
         this._objectsLayerNode.width = visibleSize.width;
         this._objectsLayerNode.height = visibleSize.height;
+        if (this._gridLayerNode) {
+            this._gridLayerNode.width = visibleSize.width;
+            this._gridLayerNode.height = visibleSize.height;
+        }
 
         this._objects = [];
         this._renderList0 = [];
@@ -179,6 +201,10 @@ cc.Class({
         this._mapLayerNode.height = this.node.height;
         this._objectsLayerNode.width = this.node.width;
         this._objectsLayerNode.height = this.node.height;
+        if (this._gridLayerNode) {
+            this._gridLayerNode.width = this.node.width;
+            this._gridLayerNode.height = this.node.height;
+        }
         this._map.updateVisibleSize(this.node.width, this.node.height);
     },
     _initScene: function() {
@@ -322,9 +348,15 @@ cc.Class({
         this.addObject(effect, layer);
         return effect;
     },
+    _updateGrids: function() {
+        if (this._gridVisible) {
+            this._map.drawGrid(this._gridLayerNode.getComponent(cc.Graphics))
+        }
+    },
     update: function(dt) {
         if (this._running) {
             this._map.gameLoop();
+            this._updateGrids();
             this._updateZOrderF(this._renderList0);
             this._updateZOrderF(this._renderList1);
             this._renderList0.sort(this._sortFunction);
