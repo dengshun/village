@@ -295,23 +295,22 @@ var RpgMap = cc.Class({
             for (let j = exStartRow; j < maxRow; j++) {
                 let key = i + "|" + j;
                 let square = this._sceneData.take(key);
-                if (square) {
-                    let sx = i * gridSize;
-                    let sy = j * gridSize;
-
-                    let p = this._getTileScreenPosition(offsetX + (i - startCol) * gridSize,
-                        offsetY + (j - startRow) * gridSize);
+                if (square && square.isVill) {
+                    let sx = offsetX + (i - startCol) * gridSize;
+                    let sy = offsetY + (j - startRow) * gridSize;
+                    let visibleSize = this._mapVisibleSize;
+                    sy = visibleSize.height - sy;
 
                     var fillColor = new cc.Color(6, 142, 41, 190);
                     g.fillColor = fillColor;
                     var lineColor = new cc.Color(166, 10, 10, 255);
                     g.strokeColor = lineColor;
                     g.lineWidth = 2;
-                    g.moveTo(p.x, p.y);
-                    g.lineTo(p.x + gridSize, p.y);
-                    g.lineTo(p.x + gridSize, p.y - gridSize);
-                    g.lineTo(p.x, p.y - gridSize);
-                    g.lineTo(p.x, p.y);
+                    g.moveTo(sx, sy);
+                    g.lineTo(sx + gridSize, sy);
+                    g.lineTo(sx + gridSize, sy - gridSize);
+                    g.lineTo(sx, sy - gridSize);
+                    g.lineTo(sx, sy);
                     g.stroke();
                     g.fill();
                 }

@@ -18,12 +18,28 @@ let AssetsManager = cc.Class({
         _loadingIndex: null,
 
         _gameAssets: null,
+        _buildingAtlas: {
+            type: cc.SpriteAtlas,
+            default: null,
+            serializable: false
+        },
+        buildingAtlas: {
+            get: function() {
+                if (this._buildingAtlas == null && cc.hj) {
+                    this._buildingAtlas = cc.loader.getRes(cc.hj.R.tex.building, cc.SpriteAtlas);
+                }
+                return this._buildingAtlas;
+            },
+            visible: false,
+        },
     },
     init: function() {
         this._loadQueue = [];
         this._assetLoadedHash = {};
 
         this._preLoadAssets = [
+            { url: cc.hj.R.json.ConfigBuilding, type: null },
+            { url: cc.hj.R.tex.building, type: cc.SpriteAtlas },
             { url: cc.hj.R.fab.sceneLoading, type: cc.Prefab },
             { url: cc.hj.R.fab.characterObject, type: cc.Prefab },
             { url: cc.hj.R.fab.ncharacterObject, type: cc.Prefab },

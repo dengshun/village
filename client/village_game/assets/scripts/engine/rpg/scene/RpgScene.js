@@ -350,7 +350,8 @@ cc.Class({
     },
     _updateGrids: function() {
         if (this._gridVisible) {
-            this._map.drawGrid(this._gridLayerNode.getComponent(cc.Graphics))
+            let g = this._gridLayerNode.getComponent(cc.Graphics);
+            this._map.drawGrid(g);
         }
     },
     update: function(dt) {

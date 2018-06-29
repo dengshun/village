@@ -1,6 +1,8 @@
 module.exports = {
     music: {},
-    json: {},
+    json: {
+        ConfigBuilding: "config/ConfigBuilding"
+    },
     fab: {
         sceneLoading: "prefab/scene/sceneLoading",
 
@@ -11,5 +13,7 @@ module.exports = {
         bloodBar: "prefab/scene/bloodBar",
         titleStuff: "prefab/scene/titleStuff",
     },
-    tex: {}
+    tex: {
+        building: "textures/scene/buildings",
+    }
 }

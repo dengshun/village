@@ -1,7 +1,6 @@
 let BaseModule = require("BaseModule");
 let SceneLoading = require("SceneLoading");
 let GameObject = require("GameObject");
-
 const GameObjectFactory = require("GameObjectFactory");
 const SceneConst = require("SceneConst");
 const FrameGraphicsBase = require("FrameGraphicsBase");
@@ -32,6 +31,7 @@ cc.Class({
     },
     onLoad() {
         this._super();
+        cc.hj.Global.buildingList = cc.loader.getRes(cc.hj.R.json.ConfigBuilding, null);
         GameObjectFactory.getInstance().registePrefab("CharacterObject", cc.loader.getRes(cc.hj.R.fab.characterObject, cc.Prefab));
         GameObjectFactory.getInstance().registePrefab("NCharacterObject", cc.loader.getRes(cc.hj.R.fab.ncharacterObject, cc.Prefab));
         GameObjectFactory.getInstance().registePrefab("BounceFont", cc.loader.getRes(cc.hj.R.fab.bounceFont, cc.Prefab));
