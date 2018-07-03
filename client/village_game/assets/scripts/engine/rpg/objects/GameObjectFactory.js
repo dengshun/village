@@ -35,6 +35,8 @@ let GameObjectFactory = cc.Class({
             compName = "NCharacterObject";
         } else if (type == SceneConst.EFFECT) {
             compName = "EffectObject";
+        } else if (type == SceneConst.BUILDING) {
+            compName = "BuildingObject";
         } else if (type == SceneConst.FONT) {
             compName = "BounceFont";
         } else if (type == SceneConst.STUFF_HP) {
@@ -69,6 +71,8 @@ let GameObjectFactory = cc.Class({
             compName = "NCharacterObject";
         } else if (obj.type == SceneConst.EFFECT) {
             compName = "EffectObject";
+        } else if (type == SceneConst.BUILDING) {
+            compName = "BuildingObject";
         } else if (obj.type == SceneConst.FONT) {
             compName = "BounceFont";
         } else if (obj.type == SceneConst.STUFF_HP) {

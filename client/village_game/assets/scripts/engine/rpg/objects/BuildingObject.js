@@ -1,6 +1,5 @@
 const CharacterBase = require("CharacterBase");
 cc.Class({
-    name: "BuildingObject",
     extends: CharacterBase,
     properties: {
         _footNode: {

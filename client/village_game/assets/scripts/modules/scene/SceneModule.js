@@ -3,15 +3,16 @@ let SceneLoading = require("SceneLoading");
 let GameObject = require("GameObject");
 const GameObjectFactory = require("GameObjectFactory");
 const SceneConst = require("SceneConst");
-const FrameGraphicsBase = require("FrameGraphicsBase");
+const FramesGraphicsBase = require("FramesGraphicsBase");
 const BounceFontsManager = require("BounceFontsManager");
 const Direction = require("Direction");
 const SceneManager = require("SceneManager");
 const SceneFightManager = require("SceneFightManager");
 const GraphicsManager = require("GraphicsManager");
 const CharacterController = require("CharacterController");
-const FrameCharGraphics = require("FrameCharGraphics");
+const FramesCharGraphics = require("FramesCharGraphics");
 const SpineGraphicsBase = require("SpineGraphicsBase");
+const SingleSpriteGraphics = require("SingleSpriteGraphics");
 cc.Class({
     extends: BaseModule,
     properties: {
@@ -22,6 +23,10 @@ cc.Class({
         _monsterIdStart: {
             serializable: false,
             default: 100000,
+        },
+        _buildingIdStart: {
+            serializable: false,
+            default: 200000,
         },
 
         _mainPlayer: {
@@ -36,6 +41,7 @@ cc.Class({
         GameObjectFactory.getInstance().registePrefab("NCharacterObject", cc.loader.getRes(cc.hj.R.fab.ncharacterObject, cc.Prefab));
         GameObjectFactory.getInstance().registePrefab("BounceFont", cc.loader.getRes(cc.hj.R.fab.bounceFont, cc.Prefab));
         GameObjectFactory.getInstance().registePrefab("EffectObject", cc.loader.getRes(cc.hj.R.fab.effectObject, cc.Prefab));
+        GameObjectFactory.getInstance().registePrefab("BuildingObject", cc.loader.getRes(cc.hj.R.fab.buildingObject, cc.Prefab));
         GameObjectFactory.getInstance().registePrefab("BloodBar", cc.loader.getRes(cc.hj.R.fab.bloodBar, cc.Prefab));
         GameObjectFactory.getInstance().registePrefab("TitleStuff", cc.loader.getRes(cc.hj.R.fab.titleStuff, cc.Prefab));
 
@@ -80,14 +86,15 @@ cc.Class({
 
         this._createMainPlayer();
         this._createTestMonsters();
+        this._createTestBuildings();
     },
-    _createTestMonsters: function() {
+    _createTestMonsters() {
         for (let i = 0; i < 10; i++) {
             this._monsterIdStart++;
             this._createMonster(this._monsterIdStart);
         }
     },
-    _createMonster: function(id) {
+    _createMonster(id) {
         let monster = GameObjectFactory.getInstance().getObject(SceneConst.NPC).getComponent("NCharacterObject");
         monster.id = id;
         this._gameScene.characterHash[monster.id] = monster;
@@ -101,7 +108,7 @@ cc.Class({
         monster.directionNum = directionNum;
         monster.alphaCheck = false;
         monster.autoCulling = false;
-        // let graphicsR = new FrameGraphicsBase();
+        // let graphicsR = new FramesGraphicsBase();
         // graphicsR.addPart(SceneConst.BODY_TYPE, 11102);
         // monster.graphicsRes = graphicsR;
 
@@ -136,7 +143,7 @@ cc.Class({
         // BounceFontsManager.getInstance().addFightBounce(monster,"999887",Direction.LeftUp);
         // BounceFontsManager.getInstance().addFightBounce(monster,"999887",Direction.LeftUp);
     },
-    _createMainPlayer: function() {
+    _createMainPlayer() {
         if (!this._mainPlayer) {
             this._mainPlayer = GameObjectFactory.getInstance().getObject(SceneConst.CHAR).getComponent("CharacterObject");
         }
@@ -165,7 +172,7 @@ cc.Class({
 
         // this._gameScene.map.follow(this._mainPlayer);
     },
-    _testSkillHandler: function(evt) {
+    _testSkillHandler(evt) {
         // if (skillData == 0) {
         let targets = this._gameScene.getAroundObjects(SceneConst.NPC, this._mainPlayer.pos, 200, this._mainPlayer);
         cc.log(targets);
@@ -178,7 +185,7 @@ cc.Class({
         // }
         // }
     },
-    _useSkillTest: function(type, attacker, attacked) {
+    _useSkillTest(type, attacker, attacked) {
         let fightEnd = function(attacker, attacked) {}
         SceneFightManager.getInstance().playSkillAction1(attacker.id, type == 0 ? null : attacked.id, 0, fightEnd, this);
         this.scheduleOnce(function() {
@@ -207,7 +214,7 @@ cc.Class({
             this._checkAndCreateMonster();
         }, 0.1);
     },
-    _checkAndCreateMonster: function() {
+    _checkAndCreateMonster() {
         let curCount = 0;
         for (let charId in this._gameScene.characterHash) {
             let obj = this._gameScene.characterHash[charId];
@@ -221,6 +228,40 @@ cc.Class({
             this._createMonster(this._monsterIdStart);
         }
     },
+    _createTestBuildings() {
+        this._buildingIdStart++;
+        let data1 = { data: cc.hj.Global.buildingList[0], posX: 3280, posY: 816 };
+        this._createABuilding(this._buildingIdStart, data1, cc.hj.assetsMgr.getBuildingSpriteFrame(1));
+        this._buildingIdStart++;
+        let data2 = { data: cc.hj.Global.buildingList[1], posX: 3536, posY: 1104 };
+        this._createABuilding(this._buildingIdStart, data2, cc.hj.assetsMgr.getBuildingSpriteFrame(2));
+        this._buildingIdStart++;
+        let data3 = { data: cc.hj.Global.buildingList[2], posX: 3792, posY: 1008 };
+        this._createABuilding(this._buildingIdStart, data3, cc.hj.assetsMgr.getBuildingSpriteFrame(3));
+    },
+    _createABuilding(id, data, spriteFrame) {
+        let building = GameObjectFactory.getInstance().getObject(SceneConst.BUILDING).getComponent("BuildingObject");
+        building.id = id;
+        building.data = data.data;
+        this._gameScene.characterHash[building.id] = building;
+        building.render = this._gameScene.renderEffect;
+        building.posX = data.posX;
+        building.posY = data.posY;
+        building.alphaCheck = false;
+        building.autoCulling = false;
 
+        let graphicsR = new SingleSpriteGraphics();
+        graphicsR.addPart(SceneConst.BODY_TYPE, spriteFrame);
+        // building.node.scale = 0.2;
+        building.graphicsRes = graphicsR;
+        building.stuffOffSetY = 80;
+
+        let title = GameObjectFactory.getInstance().getObject(SceneConst.STUFF_TITLE).getComponent("TitleStuff");
+        building.title = title;
+        title.text = data.data.name;
+        title.textColor = new cc.Color(255, 0, 0);
+
+        this._gameScene.addObject(building);
+    }
 
 });

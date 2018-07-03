@@ -5,7 +5,7 @@ const CharacterBase = require("CharacterBase");
 const RenderCharacter = require("RenderCharacter");
 const RenderNCharacter = require("RenderNCharacter");
 const RenderEffect = require("RenderEffect");
-const FrameGraphicsBase = require("FrameGraphicsBase");
+const FramesGraphicsBase = require("FramesGraphicsBase");
 const SceneConst = require("SceneConst");
 const SquareMapData = require("SquareMapData");
 const GameObjectFactory = require("GameObjectFactory");
@@ -332,7 +332,7 @@ cc.Class({
     },
     createEffect: function(effectId, pos = null, layer = SceneConst.TOP_LAYER, faceTo = null) {
         let effect = GameObjectFactory.getInstance().getObject(SceneConst.EFFECT).getComponent("EffectObject");
-        let graphicsR = new FrameGraphicsBase();
+        let graphicsR = new FramesGraphicsBase();
         graphicsR.addPart(SceneConst.EFFECT_TYPE, effectId);
         effect.graphicsRes = graphicsR;
         effect.isAutoReturn = true;

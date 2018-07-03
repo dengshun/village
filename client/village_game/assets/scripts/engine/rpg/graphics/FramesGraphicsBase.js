@@ -1,8 +1,8 @@
 const GraphicsManager = require("GraphicsManager");
 const GraphicsBase = require("GraphicsBase");
 const SceneConst = require("SceneConst");
-let FrameGraphicsBase = cc.Class({
-    name: "FrameGraphicsBase",
+let FramesGraphicsBase = cc.Class({
+    name: "FramesGraphicsBase",
     extends: GraphicsBase,
     properties: {
         _loopPlayEnd: false, //非循环动画是否已经播放完成

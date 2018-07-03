@@ -45,6 +45,7 @@ let AssetsManager = cc.Class({
             { url: cc.hj.R.fab.ncharacterObject, type: cc.Prefab },
             { url: cc.hj.R.fab.bounceFont, type: cc.Prefab },
             { url: cc.hj.R.fab.effectObject, type: cc.Prefab },
+            { url: cc.hj.R.fab.buildingObject, type: cc.Prefab },
             { url: cc.hj.R.fab.bloodBar, type: cc.Prefab },
             { url: cc.hj.R.fab.titleStuff, type: cc.Prefab },
         ];
@@ -60,7 +61,9 @@ let AssetsManager = cc.Class({
         }
         return prefab;
     },
-
+    getBuildingSpriteFrame: function(id) {
+        return this.buildingAtlas.getSpriteFrame(id);
+    },
     _getNotLoadedAssets: function(assets) {
         let noLoaded = [];
         for (let index in assets) {

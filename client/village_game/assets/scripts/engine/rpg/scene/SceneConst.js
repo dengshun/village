@@ -1,10 +1,11 @@
 module.exports = {
-    CHAR:"char",
-    NPC:"npc",
-    EFFECT:"effect",
-    FONT:"font",
-    STUFF_HP:"stuffHp",
-    STUFF_TITLE:"stuffTitle",
+    CHAR: "char",
+    NPC: "npc",
+    EFFECT: "effect",
+    BUILDING: "building",
+    FONT: "font",
+    STUFF_HP: "stuffHp",
+    STUFF_TITLE: "stuffTitle",
 
     /**特效类型 **/
     EFFECT_TYPE: 'eid',

@@ -1,10 +1,15 @@
 const GraphicsBase = require("GraphicsBase");
 const Actions = require("Actions");
-let SpriteGraphics = cc.Class({
-    name: "SpriteGraphics",
+const SceneConst = require("SceneConst");
+let SingleSpriteGraphics = cc.Class({
+    name: "SingleSpriteGraphics",
     extends: GraphicsBase,
     properties: {
-        _bodyName: "",
+        _bodySprite: {
+            type: cc.SpriteFrame,
+            serializable: false,
+            default: null,
+        },
         _nowAction: "stand",
         _parts: null,
         _bodyNode: {
@@ -15,6 +20,7 @@ let SpriteGraphics = cc.Class({
         bodyNode: {
             set: function(value) {
                 this._bodyNode = value;
+                this._updateBodyGraphics();
             },
             get: function() {
                 return this._bodyNode;
@@ -50,45 +56,28 @@ let SpriteGraphics = cc.Class({
             visible: false,
             override: true,
         },
-        _spriteAtlas: {
-            type: cc.SpriteAtlas,
-            default: null,
-            serializable: false
-        },
-        spriteAtlas: {
-            set: function(value) {
-                this._spriteAtlas = value;
-            },
-            get: function() {
-                return this._spriteAtlas;
-            },
-            visible: false,
-        }
     },
     ctor: function() {},
 
-    addPart: function(type, id) {
+    addPart: function(type, spriteFrame) {
         if (this._parts == null) {
             this._parts = [];
         }
-        this._parts.push({ type: type, id: id });
-        let gName = id;
+        this._parts.push({ type: type, spriteFrame: spriteFrame });
+
         if (type == SceneConst.BODY_TYPE || type == SceneConst.EFFECT_TYPE) {
-            this._bodyName = gName;
+            this._bodySprite = spriteFrame;
         }
         this._updateBodyGraphics();
     },
     _updateBodyGraphics: function() {
-        if (this._bodyName && this._bodyNode && this._spriteAtlas) {
-            let sf = this._spriteAtlas.getSpriteFrame(this._bodyName);
-            if (sf) {
-                let sp = this._bodyNode.getComponent(cc.Sprite);
-                if (!sp) {
-                    sp = target.addComponent(cc.Sprite);
-                }
-                sp.spriteFrame = sf;
-                this._isReady = true;
+        if (this._bodySprite && this._bodyNode) {
+            let sp = this._bodyNode.getComponent(cc.Sprite);
+            if (!sp) {
+                sp = this._bodyNode.addComponent(cc.Sprite);
             }
+            sp.spriteFrame = this._bodySprite;
+            this._isReady = true;
         }
     },
     setDirection: function(value) {
@@ -105,5 +94,6 @@ let SpriteGraphics = cc.Class({
     dispose: function() {
         this._bodyNode = null;
         this._parts = null;
+        this._bodySprite = null;
     }
 });

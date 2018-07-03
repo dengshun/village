@@ -10,7 +10,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "BuildingObject",
+    "_name": "buildingObject",
     "_objFlags": 0,
     "_parent": null,
     "_children": [
@@ -233,7 +233,10 @@
     "_posY": 0,
     "_type": "",
     "_graphics": null,
-    "_render": null
+    "_render": null,
+    "isDeath": false,
+    "_playEndCall": null,
+    "_isAutoChangeAction": true
   },
   {
     "__type__": "cc.PrefabInfo",

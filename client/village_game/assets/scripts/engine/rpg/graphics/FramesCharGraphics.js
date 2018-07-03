@@ -1,9 +1,9 @@
-const FrameGraphicsBase = require("FrameGraphicsBase");
+const FramesGraphicsBase = require("FramesGraphicsBase");
 const GraphicsManager = require("GraphicsManager");
 const SceneConst = require("SceneConst");
-let FrameCharGraphics = cc.Class({
-    name: "FrameCharGraphics",
-    extends: FrameGraphicsBase,
+let FramesCharGraphics = cc.Class({
+    name: "FramesCharGraphics",
+    extends: FramesGraphicsBase,
     properties: {
         _weaponGraphicsDatas: null, //所有动作的数据
         _weaponGraphicsData: null, //当前动作数据

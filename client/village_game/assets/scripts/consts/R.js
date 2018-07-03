@@ -10,6 +10,7 @@ module.exports = {
         ncharacterObject: "prefab/scene/ncharacterObject",
         bounceFont: "prefab/scene/bounceFont",
         effectObject: "prefab/scene/effectObject",
+        buildingObject: "prefab/scene/buildingObject",
         bloodBar: "prefab/scene/bloodBar",
         titleStuff: "prefab/scene/titleStuff",
     },
