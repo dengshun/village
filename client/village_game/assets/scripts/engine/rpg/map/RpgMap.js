@@ -59,7 +59,7 @@ var RpgMap = cc.Class({
         _loadingList: null,
         _AStar: AStarFinder,
         _cameraCullingView: {
-            default: cc.rect(0, 0, 1, 1),
+            default: new cc.Rect(0, 0, 1, 1),
             serializable: false,
         },
         mapVisibleSize: {
@@ -141,6 +141,9 @@ var RpgMap = cc.Class({
         }
         this._AStar = new AStarFinder(this._sceneData.roadArray, 8, RpgGlobal.GRID_SIZE);
 
+    },
+    updateAStarGrid: function() {
+        this._AStar.updateGrid(this._sceneData.roadArray);
     },
     follow: function(player) {
         this._focusObject = player;
@@ -296,6 +299,9 @@ var RpgMap = cc.Class({
                 let key = i + "|" + j;
                 let square = this._sceneData.take(key);
                 if (square && square.isVill) {
+                    // if (this._sceneData.roadArray[j][i] == 0) {
+                    //     continue;
+                    // }
                     let sx = offsetX + (i - startCol) * gridSize;
                     let sy = offsetY + (j - startRow) * gridSize;
                     let visibleSize = this._mapVisibleSize;

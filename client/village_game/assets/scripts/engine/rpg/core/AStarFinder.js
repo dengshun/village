@@ -151,6 +151,24 @@ let AStarFinder = cc.Class({
             this._grid.calculateLinks(0);
         this._astar = new AStar(this._grid, this._workMode);
     },
+    updateGrid(data) {
+        let rows = data.length;
+        let cols = data[0].length;
+        this._grid = new Grid(cols, rows);
+        let px;
+        let py;
+        for (py = 0; py < rows; py++) {
+            for (px = 0; px < cols; px++) {
+                this._grid.setWalkable(px, py, data[py][px] > 0);
+            }
+        }
+        if (this._workMode == 8)
+            this._grid.calculateLinks(1);
+        else if (this._workMode == 4)
+            this._grid.calculateLinks(0);
+
+        this._astar.grid = this._grid;
+    },
     getColor(node) {
         if (!node.walkable)
             return 0;
@@ -167,6 +185,14 @@ let AStar = cc.Class({
     properties: {
         _open: BinaryHeap,
         _grid: Grid,
+        grid: {
+            set: function(value) {
+                this._grid = value;
+            },
+            get: function() {
+                return this._grid;
+            }
+        },
         _endNode: ANode,
         _startNode: ANode,
         _path: Array,

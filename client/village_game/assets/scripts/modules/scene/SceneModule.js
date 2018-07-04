@@ -1,6 +1,6 @@
-let BaseModule = require("BaseModule");
-let SceneLoading = require("SceneLoading");
-let GameObject = require("GameObject");
+const BaseModule = require("BaseModule");
+const SceneLoading = require("SceneLoading");
+const GameObject = require("GameObject");
 const GameObjectFactory = require("GameObjectFactory");
 const SceneConst = require("SceneConst");
 const FramesGraphicsBase = require("FramesGraphicsBase");
@@ -13,6 +13,7 @@ const CharacterController = require("CharacterController");
 const FramesCharGraphics = require("FramesCharGraphics");
 const SpineGraphicsBase = require("SpineGraphicsBase");
 const SingleSpriteGraphics = require("SingleSpriteGraphics");
+const RpgGlobal = require("RpgGlobal");
 cc.Class({
     extends: BaseModule,
     properties: {
@@ -71,9 +72,6 @@ cc.Class({
 
 
     },
-    _loadSceneData() {
-
-    },
     _sceneReadyCallBack() {
         cc.log("ready..................................");
         cc.hj.panelMgr.closePanel(this._sceneLoading.id);
@@ -85,22 +83,25 @@ cc.Class({
         this._gameScene.map.follow(focusObj);
 
         this._createMainPlayer();
-        this._createTestMonsters();
+        this._createTestMonstersInField1();
         this._createTestBuildings();
+        this._gameScene.map.updateAStarGrid();
     },
-    _createTestMonsters() {
+    _createTestMonstersInField1() {
+        let fields1 = this._gameScene.map.sceneData.getSquaresByType(6);
         for (let i = 0; i < 10; i++) {
             this._monsterIdStart++;
-            this._createMonster(this._monsterIdStart);
+            let randomSquare = fields1[Math.floor(Math.random() * fields1.length)];
+            this._createMonster(this._monsterIdStart, randomSquare.x * RpgGlobal.GRID_SIZE, randomSquare.y * RpgGlobal.GRID_SIZE);
         }
     },
-    _createMonster(id) {
+    _createMonster(id, posX, posY) {
         let monster = GameObjectFactory.getInstance().getObject(SceneConst.NPC).getComponent("NCharacterObject");
         monster.id = id;
         this._gameScene.characterHash[monster.id] = monster;
         monster.render = this._gameScene.renderNChar;
-        monster.posX = 3482 + (Math.random() < 0.5 ? -Math.random() * 300 : Math.random() * 300);
-        monster.posY = 892 + (Math.random() < 0.5 ? -Math.random() * 300 : Math.random() * 300);
+        monster.posX = posX; //3482 + (Math.random() < 0.5 ? -Math.random() * 300 : Math.random() * 300);
+        monster.posY = posY; //892 + (Math.random() < 0.5 ? -Math.random() * 300 : Math.random() * 300);
         let directionNum = (Math.random() * 5 >> 0) + 3;
         if (directionNum > 4) {
             directionNum = directionNum - 8;
@@ -230,13 +231,13 @@ cc.Class({
     },
     _createTestBuildings() {
         this._buildingIdStart++;
-        let data1 = { data: cc.hj.Global.buildingList[0], posX: 3280, posY: 816 };
+        let data1 = { data: cc.hj.Global.buildingList[0], posX: 3280, posY: 816 + 16 };
         this._createABuilding(this._buildingIdStart, data1, cc.hj.assetsMgr.getBuildingSpriteFrame(1));
         this._buildingIdStart++;
-        let data2 = { data: cc.hj.Global.buildingList[1], posX: 3536, posY: 1104 };
+        let data2 = { data: cc.hj.Global.buildingList[1], posX: 3568 + 16, posY: 976 + 16 };
         this._createABuilding(this._buildingIdStart, data2, cc.hj.assetsMgr.getBuildingSpriteFrame(2));
         this._buildingIdStart++;
-        let data3 = { data: cc.hj.Global.buildingList[2], posX: 3792, posY: 1008 };
+        let data3 = { data: cc.hj.Global.buildingList[2], posX: 3792 + 16, posY: 1008 };
         this._createABuilding(this._buildingIdStart, data3, cc.hj.assetsMgr.getBuildingSpriteFrame(3));
     },
     _createABuilding(id, data, spriteFrame) {
@@ -249,6 +250,10 @@ cc.Class({
         building.posY = data.posY;
         building.alphaCheck = false;
         building.autoCulling = false;
+        let rectW = data.data.col * RpgGlobal.GRID_SIZE;
+        let rectH = data.data.row * RpgGlobal.GRID_SIZE;
+        building.footArea = new cc.Rect(-rectW / 2, rectH / 2, rectW, rectH);
+        // building.footVisible = true;
 
         let graphicsR = new SingleSpriteGraphics();
         graphicsR.addPart(SceneConst.BODY_TYPE, spriteFrame);
@@ -262,6 +267,26 @@ cc.Class({
         title.textColor = new cc.Color(255, 0, 0);
 
         this._gameScene.addObject(building);
+        let colStart = Math.floor((data.posX - rectW / 2) / RpgGlobal.GRID_SIZE);
+        let rowStart = Math.floor((data.posY - rectH / 2) / RpgGlobal.GRID_SIZE);
+        let colEnd = colStart + data.data.col;
+        let rowEnd = rowStart + data.data.row;
+        let doorArr = data.data.door.split(",");
+        let doorX = parseInt(doorArr[0]);
+        let doorY = parseInt(doorArr[1]);
+        let doorW = parseInt(doorArr[2]);
+        let doorH = parseInt(doorArr[3]);
+
+        for (let i = colStart; i < colEnd; i++) {
+            for (let j = rowStart; j < rowEnd; j++) {
+                if ((i - colStart) >= doorX && ((i - colStart) < (doorX + doorW)) &&
+                    (j - rowStart) >= doorY && ((j - rowStart) < (doorY + doorH))
+                ) {
+                    continue;
+                }
+                this._gameScene.map.sceneData.updateRoadWalkable(i, j, false);
+            }
+        }
     }
 
 });

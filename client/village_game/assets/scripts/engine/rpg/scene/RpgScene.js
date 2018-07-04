@@ -170,7 +170,7 @@ cc.Class({
         let rawData = null;
         let byte = new ByteArray();
         if (!this._sceneData) {
-            this._sceneData = new SquareMapData();
+            this._sceneData = new SquareMapData.MapData();
             RpgGlobal.sceneData = this._sceneData;
         }
         let self = this;

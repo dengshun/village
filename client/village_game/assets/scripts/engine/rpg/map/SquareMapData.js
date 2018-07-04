@@ -1,8 +1,9 @@
 const RpgGlobal = require("RpgGlobal");
-var Square = cc.Class({
+const Square = cc.Class({
+    name: "Square",
     properties: {
         /**0:是否可走，1:是否是透明区，.......,5:村庄区,6:野外区1,7:野外区2,8:野外区3,9:野外区4**/
-
+        type: 0,
         /**是否可以行走**/
         isCanWalk: false,
         /**是否是透明区域**/
@@ -30,14 +31,18 @@ var Square = cc.Class({
         this.y = y;
     },
 });
-var ItemData = cc.Class({
-    item_id: 0,
-    x: 0,
-    y: 0,
-    layer: 0,
-    depth: 0,
+const ItemData = cc.Class({
+    name: "ItemData",
+    properties: {
+        item_id: 0,
+        x: 0,
+        y: 0,
+        layer: 0,
+        depth: 0,
+    }
 });
-var SquareMapData = cc.Class({
+const MapData = cc.Class({
+    name: "MapData",
     properties: {
         map_id: 0,
         pixel_width: 0,
@@ -47,6 +52,11 @@ var SquareMapData = cc.Class({
         pixel_y: 0,
         roadArray: null,
         _squaresHash: null,
+        squares: {
+            get: function() {
+                return this._squaresHash;
+            }
+        }
     },
     ctor: function() {},
     resetSquaresHash: function() {
@@ -67,6 +77,16 @@ var SquareMapData = cc.Class({
     remove: function(key) {
         delete this._squaresHash[key];
     },
+    getSquaresByType: function(type) {
+        let squares = [];
+        for (let key in this._squaresHash) {
+            let square = this._squaresHash[key];
+            if (square.type == type) {
+                squares.push(square);
+            }
+        }
+        return squares
+    },
     prasePro: function(x, y, pro) {
         let square = new Square(x, y);
 
@@ -77,6 +97,22 @@ var SquareMapData = cc.Class({
         square.isField2 = ((pro >> 8) & 1) == 1;
         square.isField3 = ((pro >> 7) & 1) == 1;
         square.isField4 = ((pro >> 6) & 1) == 1;
+        /**0:是否可走，1:是否是透明区，.......,5:村庄区,6:野外区1,7:野外区2,8:野外区3,9:野外区4**/
+        if (square.isVill) {
+            square.type = 5;
+        } else if (square.isField1) {
+            square.type = 6;
+        } else if (square.isField2) {
+            square.type = 7;
+        } else if (square.isField3) {
+            square.type = 8;
+        } else if (square.isField4) {
+            square.type = 9;
+        } else if (square.isCanWalk) {
+            square.type = 0;
+        } else {
+            square.type = -1;
+        }
 
         return square;
     },
@@ -139,6 +175,4 @@ var SquareMapData = cc.Class({
         }
     }
 });
-SquareMapData.ItemData = ItemData;
-SquareMapData.Square = Square;
-module.exports = SquareMapData;
+module.exports = { MapData: MapData, ItemData: ItemData, Square: Square };
