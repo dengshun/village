@@ -169,6 +169,16 @@ cc.Class({
         this._mainPlayer.inCamera = true;
         this._mainPlayer.autoCulling = false;
         this._mainPlayer.changeController(new CharacterController());
+
+        let hpBar = GameObjectFactory.getInstance().getObject(SceneConst.STUFF_HP).getComponent("BloodBar");
+        this._mainPlayer.hpBar = hpBar;
+        hpBar.setBlood(100, 100);
+
+
+        let title = GameObjectFactory.getInstance().getObject(SceneConst.STUFF_TITLE).getComponent("TitleStuff");
+        this._mainPlayer.title = title;
+        title.text = "主角";
+
         this._gameScene.addObject(this._mainPlayer);
 
         // this._gameScene.map.follow(this._mainPlayer);
@@ -282,6 +292,10 @@ cc.Class({
                 if ((i - colStart) >= doorX && ((i - colStart) < (doorX + doorW)) &&
                     (j - rowStart) >= doorY && ((j - rowStart) < (doorY + doorH))
                 ) {
+                    let sq = this._gameScene.map.sceneData.take(i + "|" + j);
+                    if (sq) {
+                        sq.isAlpha = true;
+                    }
                     continue;
                 }
                 this._gameScene.map.sceneData.updateRoadWalkable(i, j, false);
