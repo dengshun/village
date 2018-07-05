@@ -31,7 +31,7 @@ let GameObjectFactory = cc.Class({
         let compName = "";
         if (type == SceneConst.CHAR) {
             compName = "CharacterObject";
-        } else if (type == SceneConst.NPC) {
+        } else if (type == SceneConst.NPC || type == SceneConst.MONSTER) {
             compName = "NCharacterObject";
         } else if (type == SceneConst.EFFECT) {
             compName = "EffectObject";
@@ -43,6 +43,8 @@ let GameObjectFactory = cc.Class({
             compName = "BloodBar";
         } else if (type == SceneConst.STUFF_TITLE) {
             compName = "TitleStuff";
+        } else if (type == SceneConst.STUFF_BUBBLE) {
+            compName = "BubbleStuff";
         }
         let objNode = null;
         let objComp = null;
@@ -67,11 +69,11 @@ let GameObjectFactory = cc.Class({
         let compName = "";
         if (obj.type == SceneConst.CHAR) {
             compName = "CharacterObject";
-        } else if (obj.type == SceneConst.NPC) {
+        } else if (obj.type == SceneConst.NPC || obj.type == SceneConst.MONSTER) {
             compName = "NCharacterObject";
         } else if (obj.type == SceneConst.EFFECT) {
             compName = "EffectObject";
-        } else if (type == SceneConst.BUILDING) {
+        } else if (obj.type == SceneConst.BUILDING) {
             compName = "BuildingObject";
         } else if (obj.type == SceneConst.FONT) {
             compName = "BounceFont";
@@ -79,7 +81,10 @@ let GameObjectFactory = cc.Class({
             compName = "BloodBar";
         } else if (obj.type == SceneConst.STUFF_TITLE) {
             compName = "TitleStuff";
+        } else if (type == SceneConst.STUFF_BUBBLE) {
+            compName = "BubbleStuff";
         }
+
         let pool = this._pools[compName];
         let index = pool.indexOf(obj.node);
         if (index === -1) {

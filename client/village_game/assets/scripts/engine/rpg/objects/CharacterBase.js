@@ -173,6 +173,15 @@ cc.Class({
             this._autoChangeAlpha();
         }
     },
+    _updateObjectVisible: function() {
+        this._super();
+        if (this._stuffList) {
+            let self = this;
+            this._stuffList.forEach(function(stuf) {
+                stuf.stuffVisible = self.objectVisible;
+            });
+        }
+    },
     _autoChangeAction: function() {
         if (this._action != Actions.Death && this._action != Actions.Walk) {
             this.action = Actions.Stand;
@@ -227,7 +236,7 @@ cc.Class({
             this._maxBlood = max;
         }
         if (this._hpBar) {
-            this._hpBar.setBlood(current, max);
+            this._hpBar.setBlood(current, this._maxBlood);
         }
     },
     addStuff: function(stuff) {
@@ -239,9 +248,11 @@ cc.Class({
             this.removeStuff(oldStuff);
         }
         this._stuffList.push(stuff);
+        stuff.owner = this;
         if (this.node.parent) {
             this.node.parent.addChild(stuff.node);
         }
+        this.flyStuffs();
     },
     getStuffByType: function(type) {
         let len = this._stuffList.length;
@@ -259,7 +270,7 @@ cc.Class({
             if (index >= 0) {
                 this._stuffList.splice(index, 1);
                 if (stuff.node.parent) {
-                    stuf.node.removeFromParent();
+                    stuff.node.removeFromParent();
                 }
             }
         }

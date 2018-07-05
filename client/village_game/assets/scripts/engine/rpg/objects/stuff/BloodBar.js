@@ -32,6 +32,7 @@ cc.Class({
         },
     },
     onLoad: function() {
+        this._super();
         this._bloodBar = cc.find("bar", this.node);
         this._barWidth = this._bloodBar.width;
         this._bloodBar.width = 1;

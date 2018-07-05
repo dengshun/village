@@ -48,6 +48,8 @@ let AssetsManager = cc.Class({
             { url: cc.hj.R.fab.buildingObject, type: cc.Prefab },
             { url: cc.hj.R.fab.bloodBar, type: cc.Prefab },
             { url: cc.hj.R.fab.titleStuff, type: cc.Prefab },
+            { url: cc.hj.R.fab.bubbleStuff, type: cc.Prefab },
+
         ];
     },
     getPrefab: function(url) {

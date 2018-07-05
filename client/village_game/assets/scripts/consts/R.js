@@ -13,6 +13,7 @@ module.exports = {
         buildingObject: "prefab/scene/buildingObject",
         bloodBar: "prefab/scene/bloodBar",
         titleStuff: "prefab/scene/titleStuff",
+        bubbleStuff: "prefab/scene/bubbleStuff",
     },
     tex: {
         building: "textures/scene/buildings",

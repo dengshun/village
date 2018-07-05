@@ -10,10 +10,11 @@ const SceneManager = require("SceneManager");
 const SceneFightManager = require("SceneFightManager");
 const GraphicsManager = require("GraphicsManager");
 const CharacterController = require("CharacterController");
-const FramesCharGraphics = require("FramesCharGraphics");
+const MainPlayerController2 = require("MainPlayerController2");
 const SpineGraphicsBase = require("SpineGraphicsBase");
 const SingleSpriteGraphics = require("SingleSpriteGraphics");
 const RpgGlobal = require("RpgGlobal");
+const MainPlayerAI = require("MainPlayerAI");
 cc.Class({
     extends: BaseModule,
     properties: {
@@ -45,6 +46,7 @@ cc.Class({
         GameObjectFactory.getInstance().registePrefab("BuildingObject", cc.loader.getRes(cc.hj.R.fab.buildingObject, cc.Prefab));
         GameObjectFactory.getInstance().registePrefab("BloodBar", cc.loader.getRes(cc.hj.R.fab.bloodBar, cc.Prefab));
         GameObjectFactory.getInstance().registePrefab("TitleStuff", cc.loader.getRes(cc.hj.R.fab.titleStuff, cc.Prefab));
+        GameObjectFactory.getInstance().registePrefab("BubbleStuff", cc.loader.getRes(cc.hj.R.fab.bubbleStuff, cc.Prefab));
 
         this._gameScene = this.sceneLayer.getComponent("GameScene");
         SceneManager.getInstance().scene = this._gameScene;
@@ -52,8 +54,6 @@ cc.Class({
         cc.log("game load.............................scene module");
         this._enterTestScene();
 
-        let testBtn = cc.find("testBtn", this.uiLayer);
-        testBtn.on(cc.Node.EventType.TOUCH_END, this._testSkillHandler, this);
     },
     messageHandler(msg) {
         switch (msg.actionType) {
@@ -80,12 +80,19 @@ cc.Class({
         let focusObj = new GameObject();
         focusObj.posX = 3482;
         focusObj.posY = 892;
+        focusObj.changeController(new MainPlayerController2());
         this._gameScene.map.follow(focusObj);
 
         this._createMainPlayer();
         this._createTestMonstersInField1();
         this._createTestBuildings();
         this._gameScene.map.updateAStarGrid();
+
+        setTimeout(() => {
+            let ai = new MainPlayerAI();
+            ai.setup(this._mainPlayer, this._gameScene);
+            ai.run();
+        }, 2000);
     },
     _createTestMonstersInField1() {
         let fields1 = this._gameScene.map.sceneData.getSquaresByType(6);
@@ -96,7 +103,7 @@ cc.Class({
         }
     },
     _createMonster(id, posX, posY) {
-        let monster = GameObjectFactory.getInstance().getObject(SceneConst.NPC).getComponent("NCharacterObject");
+        let monster = GameObjectFactory.getInstance().getObject(SceneConst.MONSTER).getComponent("NCharacterObject");
         monster.id = id;
         this._gameScene.characterHash[monster.id] = monster;
         monster.render = this._gameScene.renderNChar;
@@ -108,7 +115,7 @@ cc.Class({
         }
         monster.directionNum = directionNum;
         monster.alphaCheck = false;
-        monster.autoCulling = false;
+        monster.autoCulling = true;
         // let graphicsR = new FramesGraphicsBase();
         // graphicsR.addPart(SceneConst.BODY_TYPE, 11102);
         // monster.graphicsRes = graphicsR;
@@ -129,20 +136,20 @@ cc.Class({
         title.text = "Monster:" + id;
 
         this._gameScene.addObject(monster);
-        // BounceFontsManager.getInstance().addFightBounce(monster,"999888",Direction.Up);
-        // BounceFontsManager.getInstance().addFightBounce(monster,"999881",Direction.RightUp);
-        // BounceFontsManager.getInstance().addFightBounce(monster,"999882",Direction.Right);
-        // BounceFontsManager.getInstance().addFightBounce(monster,"999883",Direction.RightDown);
-        // BounceFontsManager.getInstance().addFightBounce(monster,"999884",Direction.Down);
-        // BounceFontsManager.getInstance().addFightBounce(monster,"999885",Direction.LeftDown);
-        // BounceFontsManager.getInstance().addFightBounce(monster,"999886",Direction.Left);
-        // BounceFontsManager.getInstance().addFightBounce(monster,"999887",Direction.LeftUp);
-        // BounceFontsManager.getInstance().addFightBounce(monster,"999887",Direction.LeftUp);
-        // BounceFontsManager.getInstance().addFightBounce(monster,"999887",Direction.LeftUp);
-        // BounceFontsManager.getInstance().addFightBounce(monster,"999887",Direction.LeftUp);
-        // BounceFontsManager.getInstance().addFightBounce(monster,"999887",Direction.LeftUp);
-        // BounceFontsManager.getInstance().addFightBounce(monster,"999887",Direction.LeftUp);
-        // BounceFontsManager.getInstance().addFightBounce(monster,"999887",Direction.LeftUp);
+        // BounceFontsManager.getInstance().addBounce(monster,"999888",Direction.Up);
+        // BounceFontsManager.getInstance().addBounce(monster,"999881",Direction.RightUp);
+        // BounceFontsManager.getInstance().addBounce(monster,"999882",Direction.Right);
+        // BounceFontsManager.getInstance().addBounce(monster,"999883",Direction.RightDown);
+        // BounceFontsManager.getInstance().addBounce(monster,"999884",Direction.Down);
+        // BounceFontsManager.getInstance().addBounce(monster,"999885",Direction.LeftDown);
+        // BounceFontsManager.getInstance().addBounce(monster,"999886",Direction.Left);
+        // BounceFontsManager.getInstance().addBounce(monster,"999887",Direction.LeftUp);
+        // BounceFontsManager.getInstance().addBounce(monster,"999887",Direction.LeftUp);
+        // BounceFontsManager.getInstance().addBounce(monster,"999887",Direction.LeftUp);
+        // BounceFontsManager.getInstance().addBounce(monster,"999887",Direction.LeftUp);
+        // BounceFontsManager.getInstance().addBounce(monster,"999887",Direction.LeftUp);
+        // BounceFontsManager.getInstance().addBounce(monster,"999887",Direction.LeftUp);
+        // BounceFontsManager.getInstance().addBounce(monster,"999887",Direction.LeftUp);
     },
     _createMainPlayer() {
         if (!this._mainPlayer) {
@@ -168,7 +175,7 @@ cc.Class({
         this._mainPlayer.graphicsRes = graphicsR;
         this._mainPlayer.inCamera = true;
         this._mainPlayer.autoCulling = false;
-        this._mainPlayer.changeController(new CharacterController());
+        this._mainPlayer.changeController(new MainPlayerController2());
 
         let hpBar = GameObjectFactory.getInstance().getObject(SceneConst.STUFF_HP).getComponent("BloodBar");
         this._mainPlayer.hpBar = hpBar;

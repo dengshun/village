@@ -119,7 +119,7 @@
       }
     ],
     "_prefab": null,
-    "_id": "11A8UdmNlDca098iG7vBTX",
+    "_id": "b1Lr/mGEZHJZaTeFZScbOo",
     "_opacity": 255,
     "_color": {
       "__type__": "cc.Color",
@@ -136,8 +136,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 153,
-      "height": 50
+      "width": 80,
+      "height": 80
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -163,12 +163,12 @@
       "__id__": 3
     },
     "_enabled": true,
-    "_N$string": "<color=#00ff00>Rich</c><color=#0fffff>Text</color>",
+    "_N$string": "<color=#00ff00>Rich</c><br/><color=#0fffff>Text</color>",
     "_N$horizontalAlign": 0,
     "_N$fontSize": 40,
     "_N$font": null,
     "_N$maxWidth": 0,
-    "_N$lineHeight": 50,
+    "_N$lineHeight": 40,
     "_N$imageAtlas": null,
     "_N$handleTouchEvent": true
   },

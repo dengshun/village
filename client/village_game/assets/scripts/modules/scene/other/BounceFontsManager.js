@@ -77,7 +77,7 @@ var BounceFontsManager = cc.Class({
         to.x = from.x + this._endOffX[posType];
         to.y = from.y + this._endOffY[posType];
     },
-    addFightBounce(char, text, direction, fadeOut = false) {
+    addBounce(char, text, direction, fadeOut = false) {
         let posType;
         switch (direction) {
             case Direction.Up:

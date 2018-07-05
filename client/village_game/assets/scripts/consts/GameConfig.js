@@ -17,6 +17,11 @@ module.exports = {
         PLAYER: 1, //玩家
         ITEM: 2 //物品
     }),
+    BuildingType: cc.Enum({
+        HOSPITAL: 1, //医院
+        TRAINROOM: 2, //训练房
+        EQUIPROOM: 3, //装备房
+    }),
     SceneObjectZOrder: cc.Enum({
         ZORDER_ITEM: -100,
         ZORDER_PLAYER: 0,

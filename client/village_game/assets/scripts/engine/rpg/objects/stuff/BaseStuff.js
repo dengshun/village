@@ -9,16 +9,32 @@ let StuffLayout = cc.Enum({
     LAYOUT_HEAD_HORIZONTAL: "head_horizontal",
 });
 let BaseStuff = cc.Class({
-    extends:cc.Component,
+    extends: cc.Component,
     properties: {
-        type:{
+        type: {
             default: 0,
             serializable: false,
-            visible:false,
+            visible: false,
         },
         _owner: {
             default: null,
-            serializable: false, 
+            serializable: false,
+        },
+        _stuffVisible: {
+            default: true,
+            serializable: false,
+        },
+        stuffVisible: {
+            set: function(value) {
+                this._stuffVisible = value;
+                if (this.node) {
+                    this.node.active = value;
+                }
+            },
+            get: function() {
+                return this._stuffVisible;
+            },
+            visible: false,
         },
         _offsetX: {
             type: cc.Integer,
@@ -31,10 +47,10 @@ let BaseStuff = cc.Class({
             default: 0,
         },
         owner: {
-            set: function (value) {
+            set: function(value) {
                 this._owner = value;
             },
-            get: function () {
+            get: function() {
                 return this._owner;
             },
             visible: false,
@@ -45,28 +61,28 @@ let BaseStuff = cc.Class({
             default: StuffLayout.LAYOUT_HEAD_VERTICAL,
         },
         offsetX: {
-            set: function (value) {
+            set: function(value) {
                 this._offsetX = value;
             },
-            get: function () {
+            get: function() {
                 return this._offsetX;
             },
             visible: false
         },
         offsetY: {
-            set: function (value) {
+            set: function(value) {
                 this._offsetY = value;
             },
-            get: function () {
+            get: function() {
                 return this._offsetY;
             },
             visible: false
         },
         layout: {
-            set: function (value) {
+            set: function(value) {
                 this._layout = value;
             },
-            get: function () {
+            get: function() {
                 return this._layout;
             },
             visible: false
@@ -76,26 +92,32 @@ let BaseStuff = cc.Class({
             default: false,
         },
         disposed: {
-            set: function (value) {
+            set: function(value) {
                 this._disposed = value;
             },
-            get: function () {
+            get: function() {
                 return this._disposed;
             },
             visible: false,
         },
     },
-    renew: function (...args) {
-        if(this._disposed){
-            this._disposed = false;
-            this._offsetX=0;
-            this._offsetY=0;
-            this._layout=StuffLayout.LAYOUT_HEAD_VERTICAL;
+    onLoad: function() {
+        if (!this._stuffVisible) {
+            this.node.active = false;
         }
     },
-    dispose: function () {
+    renew: function(...args) {
+        if (this._disposed) {
+            this._disposed = false;
+            this._offsetX = 0;
+            this._offsetY = 0;
+            this.stuffVisible = true;
+            this._layout = StuffLayout.LAYOUT_HEAD_VERTICAL;
+        }
+    },
+    dispose: function() {
         this._disposed = true;
-        this._owner=null;
+        this._owner = null;
     }
 });
 BaseStuff.Layout = StuffLayout;

@@ -12,6 +12,14 @@ const GameObjectFactory = require("GameObjectFactory");
 cc.Class({
     extends: cc.Component,
     properties: {
+        _lastRecutPosX: {
+            default: -1,
+            serializable: false,
+        },
+        _lastRecutPosY: {
+            default: -1,
+            serializable: false,
+        },
         _running: {
             default: false,
             serializable: false,
@@ -208,6 +216,8 @@ cc.Class({
         this._map.updateVisibleSize(this.node.width, this.node.height);
     },
     _initScene: function() {
+        this._lastRecutPosX = -1;
+        this._lastRecutPosY = -1;
         this.play();
     },
     play: function() {
@@ -232,6 +242,18 @@ cc.Class({
                 this.returnObject(obj);
             }
         }
+    },
+    recut: function() {
+        let self = this;
+        this._objects.forEach(function(obj) {
+            if (obj.autoCulling) {
+                if (self._map.cameraCullingView.contains(obj.pos)) {
+                    self._pushRenderList(obj);
+                } else {
+                    self._pullRenderList(obj);
+                }
+            }
+        });
     },
     returnObject: function(obj) {
         let stuffList = obj.stuffList;
@@ -312,6 +334,18 @@ cc.Class({
         });
         return result;
     },
+    getObjectsByType: function(type, exclude = null) {
+        let result = [];
+        let self = this;
+        this._objects.forEach(function(obj) {
+            if (obj.type == type && obj != exclude) {
+                if ((!(obj instanceof CharacterBase)) || obj.isDeath == false) {
+                    result.push(obj);
+                }
+            }
+        });
+        return result;
+    },
     getNearestObject: function(type = "", pos = null, radius = -1, exclude = null) {
         let minDist = 999999;
         let result = null;
@@ -357,6 +391,11 @@ cc.Class({
     update: function(dt) {
         if (this._running) {
             this._map.gameLoop();
+            if (this._map.focusObject.posX != this._lastRecutPosX || this._map.focusObject.posY != this._lastRecutPosY) {
+                this._lastRecutPosX = this._map.focusObject.posX;
+                this._lastRecutPosY = this._map.focusObject.posY;
+                this.recut();
+            }
             this._updateGrids();
             this._updateZOrderF(this._renderList0);
             this._updateZOrderF(this._renderList1);
@@ -369,22 +408,27 @@ cc.Class({
                 zOrder++;
                 if (curZOrder != zOrder) {
                     obj.node.setLocalZOrder(zOrder);
-                    let stuffList = obj.stuffList;
-                    if (stuffList) {
-                        stuffList.forEach(function(stuff) {
-                            zOrder++;
-                            let stuffCurZOrder = stuff.node.getLocalZOrder();
-                            if (stuffCurZOrder != zOrder) {
-                                stuff.node.setLocalZOrder(zOrder);
-                            }
-                        });
-                    }
+                }
+                let stuffList = obj.stuffList;
+                if (stuffList) {
+                    stuffList.forEach(function(stuff) {
+                        zOrder++;
+                        let stuffCurZOrder = stuff.node.getLocalZOrder();
+                        if (stuffCurZOrder != zOrder) {
+                            stuff.node.setLocalZOrder(zOrder);
+                        }
+                    });
                 }
                 if (obj.controller) {
                     obj.controller.calAction(dt);
                 }
                 obj.renderLoop(dt);
             }, this);
+            if (allList.indexOf(this._map.focusObject) < 0) {
+                if (this._map.focusObject.controller) {
+                    this._map.focusObject.controller.calAction(dt);
+                }
+            }
         }
     },
 });

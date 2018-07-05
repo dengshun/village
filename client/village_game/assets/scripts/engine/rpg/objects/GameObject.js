@@ -48,7 +48,9 @@ cc.Class({
         },
         posX: {
             set: function(value) {
-                this._posX = value;
+                if (this._posX != value) {
+                    this._posX = value;
+                }
             },
             get: function() {
                 return this._posX;
@@ -57,8 +59,9 @@ cc.Class({
         },
         posY: {
             set: function(value) {
-                this._posY = value;
-                this._zOrder = this._posY;
+                if (this._posY != value) {
+                    this._posY = value;
+                }
             },
             get: function() {
                 return this._posY;
@@ -94,11 +97,6 @@ cc.Class({
             },
             visible: false
         },
-        _zOrder: {
-            type: cc.Integer,
-            serializable: false,
-            default: 0,
-        },
         _zOrderF: {
             type: cc.Integer,
             serializable: false,
@@ -111,7 +109,7 @@ cc.Class({
         },
         zOrder: {
             get: function() {
-                return this._zOrder + this._zOrderF + this._zOrderFixed;
+                return this._posY + this._zOrderF + this._zOrderFixed;
             },
             visible: false
         },
@@ -223,12 +221,27 @@ cc.Class({
             type: Render,
             visible: false
         },
+        _objectVisible: {
+            default: true,
+            serializable: false,
+        },
+        objectVisible: {
+            set: function(value) {
+                this._objectVisible = value;
+                this._updateObjectVisible();
+            },
+            get: function() {
+                return this._objectVisible;
+            },
+            visible: false,
+        },
     },
     onLoad: function() {
         this._bodyNode = cc.find("body", this.node);
         if (this._graphics) {
             this._graphics.bodyNode = this._bodyNode;
         }
+        this._updateObjectVisible();
     },
     renew: function(...args) {
         if (this._disposed) {
@@ -246,10 +259,10 @@ cc.Class({
             this._disposed = false;
             this._zOrderFixed = 0;
             this._zOrderF = 0;
-            this._zOrder = 0;
             this.layer = SceneConst.MIDDLE_LAYER;
             this._autoCulling = true;
             this._directionNum = 0;
+            this.objectVisible = true;
         }
     },
     changeController: function(ctrl) {
@@ -276,10 +289,14 @@ cc.Class({
             this._render.render(dt, this);
         }
     },
+    _updateObjectVisible: function() {
+        if (this.node) {
+            this.node.active = this._objectVisible;
+        }
+    },
     setPos: function(x, y) {
         this._posX = x;
         this._posY = y;
-        this._zOrder = this._posY;
     },
     /**朝向某点**/
     faceToPoint: function(dx, dy) {
@@ -316,9 +333,9 @@ cc.Class({
         if (sf) {
             sf.destroy();
         }
-        let sp = this._bodyNode.getComponent(sp.Skeleton);
-        if (sp) {
-            sp.destroy();
+        let spk = this._bodyNode.getComponent(sp.Skeleton);
+        if (spk) {
+            spk.destroy();
         }
         if (this._graphics) {
             this._graphics.dispose();

@@ -299,9 +299,9 @@ var RpgMap = cc.Class({
                 let key = i + "|" + j;
                 let square = this._sceneData.take(key);
                 if (square && square.isVill) {
-                    // if (this._sceneData.roadArray[j][i] == 0) {
-                    //     continue;
-                    // }
+                    if (this._sceneData.roadArray[j][i] == 0) {
+                        continue;
+                    }
                     let sx = offsetX + (i - startCol) * gridSize;
                     let sy = offsetY + (j - startRow) * gridSize;
                     let visibleSize = this._mapVisibleSize;

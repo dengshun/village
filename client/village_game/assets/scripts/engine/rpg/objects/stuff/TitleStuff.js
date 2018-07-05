@@ -38,6 +38,7 @@ cc.Class({
         }
     },
     onLoad: function() {
+        this._super();
         cc.info("onlo ad.....................title" + this._text);
         this._label = this.node.getComponent(cc.Label);
         this.node.color = this._textColor;

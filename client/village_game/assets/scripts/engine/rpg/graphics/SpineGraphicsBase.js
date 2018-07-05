@@ -139,36 +139,36 @@ let SpineGraphicsBase = cc.Class({
         }
         this._bodySpine.setStartListener(trackEntry => {
             var animationName = trackEntry.animation ? trackEntry.animation.name : "";
-            cc.log("[track %s][animation %s] start.", trackEntry.trackIndex, animationName);
+            // cc.log("[track %s][animation %s] start.", trackEntry.trackIndex, animationName);
             if (this._startListener) {
                 this._startListener();
             }
         });
         this._bodySpine.setInterruptListener(trackEntry => {
             var animationName = trackEntry.animation ? trackEntry.animation.name : "";
-            cc.log("[track %s][animation %s] interrupt.", trackEntry.trackIndex, animationName);
+            // cc.log("[track %s][animation %s] interrupt.", trackEntry.trackIndex, animationName);
         });
         this._bodySpine.setEndListener(trackEntry => {
             var animationName = trackEntry.animation ? trackEntry.animation.name : "";
-            cc.log("[track %s][animation %s] end.", trackEntry.trackIndex, animationName);
+            // cc.log("[track %s][animation %s] end.", trackEntry.trackIndex, animationName);
             if (this._endListener) {
                 this._endListener();
             }
         });
         this._bodySpine.setDisposeListener(trackEntry => {
             var animationName = trackEntry.animation ? trackEntry.animation.name : "";
-            cc.log("[track %s][animation %s] will be disposed.", trackEntry.trackIndex, animationName);
+            // cc.log("[track %s][animation %s] will be disposed.", trackEntry.trackIndex, animationName);
         });
         this._bodySpine.setCompleteListener((trackEntry, loopCount) => {
             var animationName = trackEntry.animation ? trackEntry.animation.name : "";
-            cc.log("[track %s][animation %s] complete: %s", trackEntry.trackIndex, animationName, loopCount);
+            // cc.log("[track %s][animation %s] complete: %s", trackEntry.trackIndex, animationName, loopCount);
             if (this._completeListener) {
                 this._completeListener();
             }
         });
         this._bodySpine.setEventListener((trackEntry, event) => {
             var animationName = trackEntry.animation ? trackEntry.animation.name : "";
-            cc.log("[track %s][animation %s] event: %s, %s, %s, %s", trackEntry.trackIndex, animationName, event.data.name, event.intValue, event.floatValue, event.stringValue);
+            // cc.log("[track %s][animation %s] event: %s, %s, %s, %s", trackEntry.trackIndex, animationName, event.data.name, event.intValue, event.floatValue, event.stringValue);
         });
     },
     setEndListener: function(value) {

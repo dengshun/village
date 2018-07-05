@@ -1,11 +1,13 @@
 module.exports = {
     CHAR: "char",
     NPC: "npc",
+    MONSTER: "monster",
     EFFECT: "effect",
     BUILDING: "building",
     FONT: "font",
     STUFF_HP: "stuffHp",
     STUFF_TITLE: "stuffTitle",
+    STUFF_BUBBLE: "stuffBubble",
 
     /**特效类型 **/
     EFFECT_TYPE: 'eid',
