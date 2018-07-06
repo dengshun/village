@@ -50,8 +50,17 @@ var RpgMap = cc.Class({
         _visibleCols: 1, //可视区域能显示的最大列数
         _visibleGridRows: 1,
         _visibleGridCols: 1,
-        _lastRenderPoint: cc.v2(0, 0),
-        _centerPoint: cc.v2(0, 0), //地图中心点坐标
+        _lastRenderPoint: cc.p(-1, -1),
+        _centerPoint: cc.p(0, 0), //地图中心点坐标
+        centerPoint: {
+            set: function(v) {
+                this._centerPoint = v;
+            },
+            get: function() {
+                return this._centerPoint;
+            },
+            visible: false,
+        },
         _nowStartRow: 0,
         _nowStartCol: 0,
         _tiles: null,
@@ -127,8 +136,8 @@ var RpgMap = cc.Class({
         this._tiles = {};
         this._visibleTiles = [];
         this._loadingList = [];
-        this._lastRenderPoint.x = 0;
-        this._lastRenderPoint.y = 0;
+        this._lastRenderPoint.x = -1;
+        this._lastRenderPoint.y = -1;
         this._tileHeight = RpgGlobal.TILE_HIGHT;
         this._tileWidth = RpgGlobal.TILE_WIDTH;
         this._mapId = this._sceneData.map_id;
@@ -157,15 +166,15 @@ var RpgMap = cc.Class({
         let tar = null;
         let dis = cc.pDistance(this._focusObject.pos, this._centerPoint);
         let per = 0;
-        if (dis >= speed) {
-            per = 1 - speed / dis;
+        if (dis >= speed + 1) {
+            per = speed / dis;
             tar = Utils.interpolate(this._focusObject.pos, this._centerPoint, per);
         } else if (dis > 50 && this._focusObject.action == Actions.Stand) {
             speed = 6;
             per = (dis - speed) / dis;
             tar = Utils.interpolate(this._centerPoint, this._focusObject.pos, per);
         }
-        return this._focusObject.pos;
+        // return this._focusObject.pos;
         return tar;
     },
     render: function() {
@@ -178,13 +187,18 @@ var RpgMap = cc.Class({
         // if (newP == null) {
         //     return;
         // }
+        if (this._focusObject) {
+            let newP = this._focusObject.pos;
+            if (newP) {
+                this._centerPoint.x = newP.x;
+                this._centerPoint.y = newP.y;
+            }
+        }
+        if (this._lastRenderPoint.x == this._centerPoint.x && this._lastRenderPoint.y == this._centerPoint.y) {
+            return;
+        }
         this._lastRenderPoint.x = this._centerPoint.x;
         this._lastRenderPoint.y = this._centerPoint.y;
-        let newP = this._focusObject.pos;
-        if (newP) {
-            this._centerPoint.x = newP.x;
-            this._centerPoint.y = newP.y;
-        }
         let startX_ = this.startX;
         let startY_ = this.startY;
         let visibleSize = this._mapVisibleSize;
@@ -270,13 +284,11 @@ var RpgMap = cc.Class({
         return p;
     },
     gameLoop: function() {
-        if (this._focusObject) {
-            this.render();
-            while (this._loadingList.length > 0) {
-                let tile = this._loadingList.shift();
-                let key = tile.col + "_" + tile.row;
-                tile.load(`maps/map_image/scene_${this._mapId}/${key}`);
-            }
+        this.render();
+        while (this._loadingList.length > 0) {
+            let tile = this._loadingList.shift();
+            let key = tile.col + "_" + tile.row;
+            tile.load(`maps/map_image/scene_${this._mapId}/${key}`);
         }
     },
     drawGrid: function(g) {

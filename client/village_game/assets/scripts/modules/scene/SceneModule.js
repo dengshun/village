@@ -77,11 +77,13 @@ cc.Class({
         cc.hj.panelMgr.closePanel(this._sceneLoading.id);
         // this._gameScene.sceneScale = 0.5;
 
-        let focusObj = new GameObject();
-        focusObj.posX = 3482;
-        focusObj.posY = 892;
-        focusObj.changeController(new MainPlayerController2());
-        this._gameScene.map.follow(focusObj);
+        // let focusObj = new GameObject();
+        // focusObj.posX = 3482;
+        // focusObj.posY = 892;
+        // focusObj.changeController(new MainPlayerController2());
+        // this._gameScene.map.follow(focusObj);
+        this._gameScene.map.centerPoint.x = 3482;
+        this._gameScene.map.centerPoint.y = 892;
 
         this._createMainPlayer();
         this._createTestMonstersInField1();
@@ -174,7 +176,7 @@ cc.Class({
 
         this._mainPlayer.graphicsRes = graphicsR;
         this._mainPlayer.inCamera = true;
-        this._mainPlayer.autoCulling = false;
+        this._mainPlayer.autoCulling = true;
         this._mainPlayer.changeController(new MainPlayerController2());
 
         let hpBar = GameObjectFactory.getInstance().getObject(SceneConst.STUFF_HP).getComponent("BloodBar");

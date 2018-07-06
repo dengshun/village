@@ -37,7 +37,6 @@ cc.Class({
     _initScene() {
         this._super();
         let mapId = this._sceneData.map_id;
-        //cc.log(`maps/map_image/scene_${mapId}`);
         cc.loader.loadResDir(`maps/map_image/scene_${mapId}`, (completedCount, totalCount, item) => {}, (error, resource, urls) => {
             if (this.sceneReadyCallBack) {
                 this.sceneReadyCallBack();
@@ -84,8 +83,9 @@ cc.Class({
                 let angle = Number(Number(Math.atan2(offsetY, offsetX).toFixed(2)));
                 let xspeed = dist * Math.cos(angle);
                 let yspeed = dist * Math.sin(angle);
-                let focusObject = this.map.focusObject;
-                focusObject.setPos(focusObject.posX - xspeed, focusObject.posY + yspeed);
+                let centerPoint = this.map.centerPoint;
+                centerPoint.x = centerPoint.x - xspeed;
+                centerPoint.y = centerPoint.y + yspeed;
                 this._validateFocusPosition();
             } else {
                 if (this._scalePoints) {
@@ -181,18 +181,18 @@ cc.Class({
         let visibleSize = this.map.mapVisibleSize;
         let leftVW = visibleSize.width / 2;
         let leftVH = visibleSize.height / 2;
-        let focusObject = this.map.focusObject;
-        if (focusObject.posX - leftVW < 0) {
-            focusObject.posX = leftVW;
+        let centerPoint = this.map.centerPoint;
+        if (centerPoint.x - leftVW < 0) {
+            centerPoint.x = leftVW;
         }
-        if (focusObject.posY - leftVH < 0) {
-            focusObject.posY = leftVH;
+        if (centerPoint.y - leftVH < 0) {
+            centerPoint.y = leftVH;
         }
-        if (focusObject.posY + leftVH > this.map.mapHeight) {
-            focusObject.posY = this.map.mapHeight - leftVH;
+        if (centerPoint.y + leftVH > this.map.mapHeight) {
+            centerPoint.y = this.map.mapHeight - leftVH;
         }
-        if (focusObject.posX + leftVW > this.map.mapWidth) {
-            focusObject.posX = this.map.mapWidth - leftVW;
+        if (centerPoint.x + leftVW > this.map.mapWidth) {
+            centerPoint.x = this.map.mapWidth - leftVW;
         }
     }
 

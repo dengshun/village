@@ -89,9 +89,10 @@ cc.Class({
         if (allMonsters.length > 0) {
             let monster = allMonsters[Math.floor(Math.random() * allMonsters.length)];
             if (!monster.inCamera) {
-                this._scene.map.focusObject.controller.walkTo(monster.posX, monster.posY, true, () => {
+                // this._scene.map.focusObject.controller.walkTo(monster.posX, monster.posY, true, () => {
 
-                }, null);
+                // }, null);
+                this._scene.cameraFlyTo(monster.pos);
             }
             this._target.controller.walkTo(monster.posX, monster.posY, true, () => {
                 this.useSkillToMonster(monster);
@@ -101,7 +102,6 @@ cc.Class({
     useSkillToMonster(attacked) {
         let self = this;
         let fightEnd = function(attacker, attacked) {
-            cc.log("end-------=================================");
             attacked.setBlood(Math.max(0, attacked.currentBlood - 10));
             let harm = { attackerId: attacker.id, attackedId: attacked.id, value: 10, type: 1 }
             SceneFightManager.getInstance().charHarm(harm);

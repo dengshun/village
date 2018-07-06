@@ -9,15 +9,12 @@ const FramesGraphicsBase = require("FramesGraphicsBase");
 const SceneConst = require("SceneConst");
 const SquareMapData = require("SquareMapData");
 const GameObjectFactory = require("GameObjectFactory");
+const Utils = require("Utils");
 cc.Class({
     extends: cc.Component,
     properties: {
-        _lastRecutPosX: {
-            default: -1,
-            serializable: false,
-        },
-        _lastRecutPosY: {
-            default: -1,
+        _cameraFlyToP: {
+            default: null,
             serializable: false,
         },
         _running: {
@@ -216,8 +213,6 @@ cc.Class({
         this._map.updateVisibleSize(this.node.width, this.node.height);
     },
     _initScene: function() {
-        this._lastRecutPosX = -1;
-        this._lastRecutPosY = -1;
         this.play();
     },
     play: function() {
@@ -382,21 +377,55 @@ cc.Class({
         this.addObject(effect, layer);
         return effect;
     },
-    _updateGrids: function() {
+    _drawMapGrids: function() {
         if (this._gridVisible) {
             let g = this._gridLayerNode.getComponent(cc.Graphics);
             this._map.drawGrid(g);
         }
     },
+    _updateMapFlyCenter: function() {
+        let speed = 90;
+        let tar = null;
+        let dis = cc.pDistance(this._cameraFlyToP, this._map.centerPoint);
+        if (dis >= speed + 1) {
+            let per = speed / dis;
+            tar = Utils.interpolate(this._cameraFlyToP, this._map.centerPoint, per);
+        } else {
+            tar = this._cameraFlyToP;
+            this._cameraFlyToP = null;
+        }
+        this._map.centerPoint.x = tar.x;
+        this._map.centerPoint.y = tar.y;
+    },
+    cameraFlyTo: function(p) {
+        this._map.follow(null);
+        this._cameraFlyToP = p;
+    },
     update: function(dt) {
         if (this._running) {
-            this._map.gameLoop();
-            if (this._map.focusObject.posX != this._lastRecutPosX || this._map.focusObject.posY != this._lastRecutPosY) {
-                this._lastRecutPosX = this._map.focusObject.posX;
-                this._lastRecutPosY = this._map.focusObject.posY;
-                this.recut();
+            if (this._cameraFlyToP) {
+                this._updateMapFlyCenter();
             }
-            this._updateGrids();
+            if (this._map.focusObject && this._objects.indexOf(this._map.focusObject) < 0) {
+                if (this._map.focusObject.controller) {
+                    this._map.focusObject.controller.calAction(dt);
+                }
+            }
+            //地图渲染
+            this._map.gameLoop();
+            //绘制地图格子
+            this._drawMapGrids();
+            //渲染
+            this._objects.forEach(function(obj) {
+                if (obj.controller) {
+                    obj.controller.calAction(dt);
+                }
+                obj.renderLoop(dt);
+            });
+            //裁剪
+            this.recut();
+
+            //深度排序
             this._updateZOrderF(this._renderList0);
             this._updateZOrderF(this._renderList1);
             this._renderList0.sort(this._sortFunction);
@@ -419,16 +448,7 @@ cc.Class({
                         }
                     });
                 }
-                if (obj.controller) {
-                    obj.controller.calAction(dt);
-                }
-                obj.renderLoop(dt);
             }, this);
-            if (allList.indexOf(this._map.focusObject) < 0) {
-                if (this._map.focusObject.controller) {
-                    this._map.focusObject.controller.calAction(dt);
-                }
-            }
         }
     },
 });
