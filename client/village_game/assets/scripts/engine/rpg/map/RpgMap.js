@@ -51,6 +51,7 @@ var RpgMap = cc.Class({
         _visibleGridRows: 1,
         _visibleGridCols: 1,
         _lastRenderPoint: cc.p(-1, -1),
+        _lastRenderSize: cc.Size,
         _centerPoint: cc.p(0, 0), //地图中心点坐标
         centerPoint: {
             set: function(v) {
@@ -144,6 +145,7 @@ var RpgMap = cc.Class({
         this._mapWidth = this._sceneData.pixel_width;
         this._mapHeight = this._sceneData.pixel_height;
         this._mapVisibleSize = cc.Size.ZERO;
+        this._lastRenderSize = cc.Size.ZERO;
         this.updateVisibleSize(cc.view.getVisibleSize().width, cc.view.getVisibleSize().height);
         if (this._AStar) {
             this._AStar.dispose();
@@ -195,8 +197,12 @@ var RpgMap = cc.Class({
             }
         }
         if (this._lastRenderPoint.x == this._centerPoint.x && this._lastRenderPoint.y == this._centerPoint.y) {
-            return;
+            if (this._lastRenderSize.width == this._mapVisibleSize.width && this._lastRenderSize.height == this._mapVisibleSize.height) {
+                return;
+            }
         }
+        this._lastRenderSize.width = this._mapVisibleSize.width;
+        this._lastRenderSize.height = this._mapVisibleSize.height
         this._lastRenderPoint.x = this._centerPoint.x;
         this._lastRenderPoint.y = this._centerPoint.y;
         let startX_ = this.startX;
