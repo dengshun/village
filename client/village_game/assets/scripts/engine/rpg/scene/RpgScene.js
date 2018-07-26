@@ -130,7 +130,7 @@ cc.Class({
             default: null,
             serializable: false,
         },
-        //醉顶层渲染列表
+        //最顶层渲染列表
         _renderList2: {
             default: null,
             serializable: false,
